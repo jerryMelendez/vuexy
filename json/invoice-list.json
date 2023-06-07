@@ -1,0 +1,14 @@
+{
+  "data": [
+    {
+      "cedula": "001-150180-0022V",
+      "nombre": "Enrique de Jesús Silva Martínez",
+	  "nombrerol": "Administrador",
+      "celular": "88510765",
+      "usuario": "admin",
+      "salario": "$1000",
+      "status": false,
+      "action": 1
+    }
+  ]
+}
