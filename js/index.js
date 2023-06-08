@@ -1,23 +1,24 @@
-$( document ).ready(function() {
-    console.log( "ready!" );
-    $.ajax({
-        type: "get",
-        url: "https://api.bookfon.com/api/business/update/",
-        data: {
-            myLuckyNumber: 13
-        },
-        success: function(response) {
-            console.log(response);
-        }
-    });
-});
+// $( document ).ready(function() {
+//     console.log( "ready!" );
+//     $.ajax({
+//         type: "get",
+//         url: "https://api.bookfon.com/api/business/update/",
+//         data: {
+//             myLuckyNumber: 13
+//         },
+//         success: function(response) {
+//             console.log(response);
+//         }
+//     });
+// });
 
 $("#boton").on("click", function(e) {
     $("#categorias")
     e.preventDefault();
     $.ajax({
-        url: '../controllers/prueba.php',
+        url: '../controllers/catproductosController.php',
         type: 'GET',
+        data: {function: 'show', id: '1'},
         success: function(result){
             let categorias;
             let rows = '';

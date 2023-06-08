@@ -3,14 +3,13 @@
     class Connection{
         private $host = "localhost";
         private $usuario = "root";
-        private $pass = "";
+        private $pass = "root";
         private $db = "dbsgs";
 
         private $connection;
 
         function __construct()
         {
-            $this->connect();
         }
 
         function connect(){
@@ -26,6 +25,8 @@
             if(mysqli_connect_errno()){
                 print("Error al conectarse");
             }
+
+            return $this->connection;
         }
 
         function getData($sql)
@@ -57,6 +58,10 @@
             } else {
                 throw new Exception($error);
             }
+        }
+
+        function close(){
+            mysqli_close($this->connection);
         }
     }
 
