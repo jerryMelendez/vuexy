@@ -21,4 +21,35 @@
 	display: none;
 }
 
+.div-sucursales {
+	cursor: pointer;
+	transition: transform 0.3s ease; /* Agrega una transición suave al efecto */
+}
+  
+.div-sucursales:hover {
+	transform: scale(1.05); /* Escala el div al 120% de su tamaño original */
+}
+
+.div-sucursales:active {
+	background-color: #DEF0FF;
+	transform: scale(1.025); /* Escala el div al 90% de su tamaño original durante el clic */
+  }
+/* h1, h2, h3, h4, h5, h6 {
+	font-family: 'Public Sans';
+}
+
+p {
+	font-family: 'Public Sans';
+}
+
+a {
+	font-family: 'Public Sans';
+}
+
+body {
+	font-family: 'Public Sans';
+} */
+
+
+
 

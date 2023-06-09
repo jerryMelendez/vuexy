@@ -1,5 +1,5 @@
 <?php
-
+require ('connection.php');
     class TipoServicio  {
         static $table_name = "tiposervicio";
         static $primary_key = "id";
@@ -7,26 +7,41 @@
         private $id;
         private $tiposervicio;
 
-        public function __construct($id, $tiposervicio) {
-            $this->id = $id;
-            $this->tiposervicio = $tiposervicio;
+        public function __construct() {
         }
 
-        public function getId() {
-            return $this->id;
+        public function index(){
+            $db = new connection();// conectamos a la base de datos
+             $mysqli = mysqli_prepare($db->connect(), "select * from tiposervicio;");
+             $mysqli->execute();
+ 
+             $result = $mysqli->get_result();
+             $data = array();
+             while ($row = $result->fetch_assoc()) {
+                 array_push($data, $row);
+             }
+             echo json_encode($data);
+             
+             $db->close();
         }
 
-        public function getTiposervicio() {
-            return $this->tiposervicio;
-        }
 
-        public function setId($id) {
-            $this->id = $id;
-        }
-
-        public function setTiposervicio($tiposervicio) {
-            $this->tiposervicio = $tiposervicio;
-        }
+        public function show($id){
+            $db = new connection();// conectamos a la base de datos
+             $mysqli = mysqli_prepare($db->connect(), "select * from tiposervicio t where t.id = ?");
+             $mysqli->bind_param("i", $id);
+             $mysqli->execute();
+ 
+             $result = $mysqli->get_result();
+             $data = array();
+             while ($row = $result->fetch_assoc()) {
+                 array_push($data, $row);
+             }
+             echo json_encode($data);
+             
+             $db->close();
+         }
+       
     }
 
 ?>

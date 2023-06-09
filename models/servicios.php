@@ -1,4 +1,5 @@
 <?php
+require ('connection.php');
 
     class Servicios  {
         static $table_name = "servicios";
@@ -10,53 +11,40 @@
         private $duracion;
         private $idtipo;
 
-        public function __construct($idservicio, $idcategoria, $servicio, $duracion, $idtipo) {
-            $this->idservicio = $idservicio;
-            $this->idcategoria = $idcategoria;
-            $this->servicio = $servicio;
-            $this->duracion = $duracion;
-            $this->idtipo = $idtipo;
+        public function __construct() {
         }
 
-        public function getIdservicio() {
-            return $this->idservicio;
+        public function index(){
+            $db = new connection();// conectamos a la base de datos
+             $mysqli = mysqli_prepare($db->connect(), "select * from servicios;");
+             $mysqli->execute();
+ 
+             $result = $mysqli->get_result();
+             $data = array();
+             while ($row = $result->fetch_assoc()) {
+                 array_push($data, $row);
+             }
+             echo json_encode($data);
+             
+             $db->close();
         }
 
-        public function getIdcategoria() {
-            return $this->idcategoria;
-        }
 
-        public function getServicio() {
-            return $this->servicio;
-        }
-
-        public function getDuracion() {
-            return $this->duracion;
-        }
-
-        public function getIdtipo() {
-            return $this->idtipo;
-        }
-
-        public function setIdservicio($idservicio) {
-            $this->idservicio = $idservicio;
-        }
-
-        public function setIdcategoria($idcategoria) {
-            $this->idcategoria = $idcategoria;
-        }
-
-        public function setServicio($servicio) {
-            $this->servicio = $servicio;
-        }
-
-        public function setDuracion($duracion) {
-            $this->duracion = $duracion;
-        }
-
-        public function setIdtipo($idtipo) {
-            $this->idtipo = $idtipo;
-        }
+        public function getByidCategoria($id){
+            $db = new connection();// conectamos a la base de datos
+             $mysqli = mysqli_prepare($db->connect(), "select * from servicios s where s.idcategoria = ?;");
+             $mysqli->bind_param("i", $id);
+             $mysqli->execute();
+ 
+             $result = $mysqli->get_result();
+             $data = array();
+             while ($row = $result->fetch_assoc()) {
+                 array_push($data, $row);
+             }
+             echo json_encode($data);
+             
+             $db->close();
+         }
     }
 
 ?>

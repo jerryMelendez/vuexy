@@ -1,6 +1,5 @@
 <?php
-// require ('connection.php');
-require_once('../models/catproductos.php');
+require_once('../models/servicios.php');
 
 // $idUser = $_GET['id']; // hay sanitizar variable por temas de seguridad
 if (isset($_GET['function'])) {
@@ -8,16 +7,20 @@ if (isset($_GET['function'])) {
     switch ($_GET['function']) {
         case 'index':
             # code...
-            $catproductos = new CatProductos();
-            $catproductos->index();
+            $servicio = new Servicios();
+            $servicio->index();
             break;
         
-        default:
+        case 'getByidCategoria':
             # code...
-            $catproductos = new CatProductos();
-            $catproductos->show($_GET['id']);
+            $servicio = new Servicios();
+            $servicio->getByidCategoria($_GET['id']);
             break;
     }
+
+
+
+    
 }
 
 ?>
