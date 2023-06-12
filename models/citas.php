@@ -1,4 +1,5 @@
 <?php
+require('connection.php');
     class Citas{
         static $table_name = "citas";
         static $primary_key = "id";
@@ -27,85 +28,23 @@
             $this->idsucursal = $idsucursal;
         }
 
-        public function getId() {
-            return $this->id;
-        }
+        public function create($cita){
+            $db = new connection();// conectamos a la base de datos
+             $mysqli = mysqli_prepare($db->connect(), "SINSERT INTO `citas`(`borderColor`, `backgroundColor`, `start`, `end`, `idcliente`, `idempleado`, `estado`, `nota`, `idsucursal`) VALUES (?,?,?,?,?,?,?,?,?)");
+             $mysqli->bind_param("i", $id);
+             $mysqli->execute();
+ 
+             $result = $mysqli->get_result();
+             $data = array();
+             while ($row = $result->fetch_assoc()) {
+                 array_push($data, $row);
+             }
+             echo json_encode($data);
+             
+             $db->close();
+         }
 
-        public function getBorderColor() {
-            return $this->borderColor;
-        }
-
-        public function getBackgroundColor() {
-            return $this->backgroundColor;
-        }
-
-        public function getStart() {
-            return $this->start;
-        }
-
-        public function getEnd() {
-            return $this->end;
-        }
-
-        public function getIdcliente() {
-            return $this->idcliente;
-        }
-
-        public function getIdempleado() {
-            return $this->idempleado;
-        }
-
-        public function getEstado() {
-            return $this->estado;
-        }
-
-        public function getNota() {
-            return $this->nota;
-        }
-
-        public function getIdsucursal() {
-            return $this->idsucursal;
-        }
-
-        public function setId($id) {
-            $this->id = $id;
-        }
-
-        public function setBorderColor($borderColor) {
-            $this->borderColor = $borderColor;
-        }
-
-        public function setBackgroundColor($backgroundColor) {
-            $this->backgroundColor = $backgroundColor;
-        }
-
-        public function setStart($start) {
-            $this->start = $start;
-        }
-
-        public function setEnd($end) {
-            $this->end = $end;
-        }
-
-        public function setIdcliente($idcliente) {
-            $this->idcliente = $idcliente;
-        }
-
-        public function setIdempleado($idempleado) {
-            $this->idempleado = $idempleado;
-        }
-
-        public function setEstado($estado) {
-            $this->estado = $estado;
-        }
-
-        public function setNota($nota) {
-            $this->nota = $nota;
-        }
-
-        public function setIdsucursal($idsucursal) {
-            $this->idsucursal = $idsucursal;
-        }
+        
 
     }
 ?>
