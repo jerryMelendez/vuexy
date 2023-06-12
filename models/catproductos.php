@@ -7,33 +7,10 @@ require ('connection.php');
 
         private $id;
         private $nombrecat;
+        private $foto;
         private $estado;
 
         public function __construct() {
-        }
-
-        public function getId() {
-            return $this->id;
-        }
-
-        public function getNombrecat() {
-            return $this->nombrecat;
-        }
-
-        public function getEstado() {
-            return $this->estado;
-        }
-
-        public function setId($id) {
-            $this->id = $id;
-        }
-
-        public function setNombrecat($nombrecat) {
-            $this->nombrecat = $nombrecat;
-        }
-
-        public function setEstado($estado) {
-            $this->estado = $estado;
         }
 
         public function index(){

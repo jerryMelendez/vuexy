@@ -20,6 +20,138 @@
     <div id="categorias" class="mt-5"></div>
     <div id="servicios" class="mt-5"></div>
     <div id="tiposervicio" class="mt-5"></div>
+    <div id="usuarios" class="mt-5"></div>
+    <div id="horas"><div class="container">
+        <div class="row mt-5">
+            <div class="col">
+                <h5>Seleccione la hora de su cita</h5>
+            </div>
+            <div class="col" style="text-align: right;">
+                <button type="button" class="btn btn-outline-primary btn-sm" onclick="backbutton()">Atrás</button>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-4">
+                <div class="card div-horas" onclick="SelectHora(8)">
+                    <label class="centrarHora">8 am</label>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card div-horas" onclick="SelectHora(9)">
+                    <label class="centrarHora">9 am</label>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card div-horas" onclick="SelectHora(10)">
+                    <label class="centrarHora">10 am</label>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-4">
+                <div class="card div-horas" onclick="SelectHora(11)">
+                    <label class="centrarHora">11 am</label>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card div-horas" onclick="SelectHora(1)">
+                    <label class="centrarHora">1 pm</label>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card div-horas" onclick="SelectHora(2)">
+                    <label class="centrarHora">2 pm</label>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-4">
+                <div class="card div-horas" onclick="SelectHora(3)">
+                    <label class="centrarHora">3 pm</label>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card div-horas" onclick="SelectHora(4)">
+                    <label class="centrarHora">4 pm</label>
+                </div>
+            </div>
+        </div>
+    </div></div>
+    <div id="formulario">
+        <div class="container">
+            <div class="row mt-5">
+                <div class="col">
+                    <h5>Ingrese sus datos</h5>
+                </div>
+                <div class="col" style="text-align: right;">
+                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="backbutton()">Atrás</button>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="container">
+                                <div class="row mt-5">
+                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+                                        <label>Nombre completo</label>
+                                    </div>
+                                    <div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-12">
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row mt-4">
+                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+                                        Celular
+                                    </div>
+                                    <div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-12">
+                                        <input type="number" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row mt-4">
+                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+                                        Correo
+                                    </div>
+                                    <div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-12">
+                                        <input type="email" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row mt-4">
+                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12">Departamento</div>
+                                    <div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-12">
+                                        <select class="form-select" aria-label="Default select example" onchange="selectDepartamento(event)">
+                                            <option selected>Seleccione un departamento</option>
+                                            <option value="Managua">Managua</option>
+                                            <option value="Boaco">Boaco</option>
+                                            <option value="Carazo">Carazo</option>
+                                            <option value="Chinandega">Chinandega</option>
+                                            <option value="Estelí">Estelí</option>
+                                            <option value="Granada">Granada</option>
+                                            <option value="Jinotega">Jinotega</option>
+                                            <option value="Leon">Leon</option>
+                                            <option value="Madriz">Madriz</option>
+                                            <option value="Masaya">Masaya</option>
+                                            <option value="Matagalpa">Matagalpa</option>
+                                            <option value="Nueva Segovia">Nueva Segovia</option>
+                                            <option value="Rivas">Rivas</option>
+                                            <option value="Rio San Juan">Rio San Juan</option>
+                                            <option value="R. Autonoma Del atlántico Norte">R. Autonoma Del atlántico Norte</option>
+                                            <option value="R. Autonoma Del atlántico Sur">R. Autonoma Del atlántico Sur</option>
+                                          </select>
+                                    </div>
+                                </div>
+                                <div class="row mt-5">
+                                    <div class="col" style="text-align: center;">
+                                        <button type="button" class="btn btn-primary">Enviar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
 <script src="../js/index.js"></script>

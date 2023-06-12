@@ -1,5 +1,8 @@
 
 let steps = 1; // Variable que lleva el control de los pasos del formulario
+let idsucursal; // id de la sucursal seleccionada
+let fechaCita;
+let horaCita;
 
 // Funcion que se ejecuta al presionar el boton de regresar
 function backbutton(){
@@ -21,13 +24,35 @@ function backbutton(){
             $('#servicios').show();
             steps--;
             break;
+        case 5:
+            $('#usuarios').hide();
+            $('#tiposervicio').show();
+            steps--;
+            break;
+        case 6:
+            $('#horas').hide();
+            $('#usuarios').show();
+            steps--;
+            break;
+        case 7:
+            $('#formulario').hide();
+            $('#horas').show();
+            steps--;
+            break;
     }
+}
+
+// evento seleccionar fecha
+function selectFecha(event){
+    fechaCita = event.target.value;
 }
 
 // Peticion que se ejecuta al cargar la pagina
 $( document ).ready(function() {
     let cols = ``;
-
+    $('#horas').hide();
+    $('#formulario').hide();
+    
     $.ajax({
         type: "GET",
         url: "../controllers/sucursalController.php",
@@ -38,7 +63,7 @@ $( document ).ready(function() {
             // console.log(JSON.parse(result));
             JSON.parse(result).forEach(sucursal => {
                 cols += `
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mt-4" onclick="getCategorias()">
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mt-4" onclick="getCategorias(${sucursal.idsucursal})">
                             <div class="card div-sucursales">
                                 <div class="card-body">
                                     ${sucursal.nombre}
@@ -53,7 +78,7 @@ $( document ).ready(function() {
                                     <div class="col-6">
                                         <h5>Selecciona la sucursal</h5>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-6" style="text-align: right;">
                                         <button type="button" class="btn btn-outline-primary btn-sm" onclick="backbutton()">Atrás</button>
                                     </div>
                                 </div>
@@ -71,7 +96,8 @@ $( document ).ready(function() {
 });
 
 // Funcion que se ejecuta al seleccionar una sucursal
-function getCategorias() {
+function getCategorias(idsucursall) {
+    idsucursal = idsucursall;
     steps++;
     let cols = ``;
     $.ajax({
@@ -87,10 +113,19 @@ function getCategorias() {
                 const prom = new Promise((resolve) => {
                     for (let i = 0; i < categorias.length; i++) {
                         cols += `
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mt-4" onclick="getServiciosBySucursal(${categorias[i].id})">
-                            <div class="card div-sucursales">
+                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 mt-3" onclick="getServiciosBySucursal(${categorias[i].id})">
+                            <div class="card div-categorias">
                                 <div class="card-body">
-                                    ${categorias[i].nombrecat}
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-4 mt-3">
+                                                <img src="../assets/img/categorias/${categorias[i].foto}" class="rounded-circle" style="max-width: 80px; min-width: 80px; max-height: 80px; min-height: 80px; border: #FFC275 3px solid;" alt="Avatar" />
+                                            </div>
+                                            <div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-8 mt-3">
+                                                <label style="cursor: pointer;"><strong>${categorias[i].nombrecat}</strong></label>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>`;
@@ -106,7 +141,7 @@ function getCategorias() {
                                     <div class="col-6">
                                         <h5>Selecciona la categoría</h5>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-6" style="text-align: right;">
                                         <button type="button" class="btn btn-outline-primary btn-sm" onclick="backbutton()">Atrás</button>
                                     </div>
                                 </div>
@@ -148,11 +183,28 @@ function getServiciosBySucursal(idSucursal){
                 
                 const prom = new Promise((resolve) => {
                     for (let i = 0; i < servicios.length; i++) {
+                        // cols += `
+                        // <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mt-4" onclick="selectTipoServicio()">
+                        //     <div class="card div-sucursales">
+                        //         <div class="card-body">
+                        //             ${servicios[i].servicio}
+                        //         </div>
+                        //     </div>
+                        // </div>`;
                         cols += `
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mt-4" onclick="selectTipoServicio()">
-                            <div class="card div-sucursales">
+                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 mt-3" onclick="selectTipoServicio()">
+                            <div class="card div-servicios">
                                 <div class="card-body">
-                                    ${servicios[i].servicio}
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-4 mt-3">
+                                                <img src="../assets/img/servicios/${servicios[i].foto}" class="rounded-circle" style="max-width: 80px; min-width: 80px; max-height: 80px; min-height: 80px; border: #FFC275 3px solid;" alt="Avatar" />
+                                            </div>
+                                            <div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-8 mt-3">
+                                                <label style="cursor: pointer;"><strong>${servicios[i].servicio}</strong></label>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>`;
@@ -168,7 +220,7 @@ function getServiciosBySucursal(idSucursal){
                                     <div class="col-6">
                                         <h5>Selecciona el servicio</h5>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-6" style="text-align: right;">
                                         <button type="button" class="btn btn-outline-primary btn-sm" onclick="backbutton()">Atrás</button>
                                     </div>
                                 </div>
@@ -193,6 +245,7 @@ function getServiciosBySucursal(idSucursal){
     });
 }
 
+// cargar los tipos de servicios
 function selectTipoServicio(){
     steps++;
     let cols = ``;
@@ -209,7 +262,7 @@ function selectTipoServicio(){
                 const prom = new Promise((resolve) => {
                     for (let i = 0; i < tiposervicio.length; i++) {
                         cols += `
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mt-4">
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mt-4" onclick="getUsuarios()">
                             <div class="card div-sucursales">
                                 <div class="card-body">
                                     ${tiposervicio[i].tiposervicio}
@@ -228,7 +281,7 @@ function selectTipoServicio(){
                                     <div class="col-6">
                                         <h5>Selecciona el servicio</h5>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-6" style="text-align: right;">
                                         <button type="button" class="btn btn-outline-primary btn-sm" onclick="backbutton()">Atrás</button>
                                     </div>
                                 </div>
@@ -253,3 +306,110 @@ function selectTipoServicio(){
     });
 }
 
+// cargar los estilistas
+function getUsuarios(){
+    steps++;
+    let cols = ``;
+    $.ajax({
+        url: '../controllers/usuarioController.php',
+        type: 'GET',
+        data: {function: 'getByIdSucursal', idsucursal},
+        success: function(result){
+            let usuarios;
+
+            if (result !== 0){
+                usuarios = JSON.parse(result);
+                
+                const prom = new Promise((resolve) => {
+                    for (let i = 0; i < usuarios.length; i++) {
+                        cols += `
+                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 mt-3">
+                            <div class="card div-usuarios" onclick="selecEstilista()">
+                                <div class="card-body">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-4 mt-3">
+                                                <img src="../assets/img/avatars/${usuarios[i].avatar}" class="rounded-circle" style="width: 80px;" alt="Avatar" />
+                                            </div>
+                                            <div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-8 mt-3">
+                                                <label style="cursor: pointer;"><strong>${usuarios[i].nombre}</strong></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+                    }
+
+                    resolve(cols);
+                });
+
+                prom.then(() => {
+                    let html = `
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-6"></div>
+                            <div class="col-6" style="text-align: right;">
+                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="backbutton()">Atrás</button>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col">
+                                <label style="font-weight: bold">Seleccione la fecha de su reserva:</label>
+                            </div>
+                            <div class="col">
+                                <input id="inputFecha" type="date" class="form-control" onchange="selectFecha(event)">
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col">
+                                <label style="font-weight: bold">Seleccione el estilista</label>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            ${cols}
+                    </div>`;
+
+                    $('#tiposervicio').hide();
+                    $('#usuarios').show();
+                    $('#usuarios').html(html);
+                });
+            }
+            else{
+                usuarios = false;
+            }
+        },
+        error: function(error) {
+            alert('Hubo un error en la peticion');
+            console.log(error);
+        }
+    });
+}
+
+function selecEstilista(){
+    steps++;
+    if(fechaCita){
+        $('#usuarios').hide();
+        $('#horas').show();
+    }
+    else{
+        console.log('fecha no seleccionada');
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Por favor seleccione una fecha para continuar',
+          })
+    }
+}
+
+function SelectHora(hora){
+    console.log(hora);
+    steps++;
+    horacita = hora;
+    $('#horas').hide();
+    $('#formulario').show();
+}
+
+function selectDepartamento(event){
+    console.log(event);
+}

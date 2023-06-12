@@ -27,13 +27,88 @@
 }
   
 .div-sucursales:hover {
+	background-color: #B6DDFF;
 	transform: scale(1.05); /* Escala el div al 120% de su tamaño original */
 }
 
 .div-sucursales:active {
-	background-color: #DEF0FF;
+	background-color: #6ABBFF;
 	transform: scale(1.025); /* Escala el div al 90% de su tamaño original durante el clic */
   }
+
+.div-usuarios {
+	cursor: pointer;
+	transition: transform 0.3s ease; /* Agrega una transición suave al efecto */
+}
+  
+.div-usuarios:hover {
+	background-color: #B9FFB6;
+	transform: scale(1.05); /* Escala el div al 120% de su tamaño original */
+}
+
+.div-usuarios:active {
+	background-color: #87FF81;
+	transform: scale(1.025); /* Escala el div al 90% de su tamaño original durante el clic */
+}
+
+.div-categorias {
+	cursor: pointer;
+	transition: transform 0.3s ease; /* Agrega una transición suave al efecto */
+}
+  
+.div-categorias:hover {
+	background-color: #fff9e8;
+	transform: scale(1.05); /* Escala el div al 120% de su tamaño original */
+}
+
+.div-categorias:active {
+	background-color: #ffefa7;
+	transform: scale(1.025); /* Escala el div al 90% de su tamaño original durante el clic */
+}
+
+.div-servicios {
+	cursor: pointer;
+	transition: transform 0.3s ease; /* Agrega una transición suave al efecto */
+}
+  
+.div-servicios:hover {
+	background-color: #ffe8e8;
+	transform: scale(1.05); /* Escala el div al 120% de su tamaño original */
+}
+
+.div-servicios:active {
+	background-color: #ffa7a7;
+	transform: scale(1.025); /* Escala el div al 90% de su tamaño original durante el clic */
+}
+
+.div-horas {
+	height: 50px;
+	cursor: pointer;
+	transition: transform 0.3s ease; /* Agrega una transición suave al efecto */
+	border: #efc7ff 3px solid;
+}
+  
+.div-horas:hover {
+	background-color: #F0CAFF;
+	transform: scale(1.05); /* Escala el div al 120% de su tamaño original */
+}
+
+.div-horas:active {
+	background-color: #DF8EFF;
+	transform: scale(1.025); /* Escala el div al 90% de su tamaño original durante el clic */
+}
+
+.centrarHora{
+	cursor: pointer; 
+	position: absolute; 
+	top: 25%; 
+	left: 40%;
+}
+
+.div-disabled{
+	pointer-events:none; 
+	color: gray; background-color: rgb(243, 243, 243);
+}
 /* h1, h2, h3, h4, h5, h6 {
 	font-family: 'Public Sans';
 }
