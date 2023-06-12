@@ -3,6 +3,8 @@ let steps = 1; // Variable que lleva el control de los pasos del formulario
 let idsucursal; // id de la sucursal seleccionada
 let fechaCita;
 let horaCita;
+let idusuario;
+let duracion;
 
 // Funcion que se ejecuta al presionar el boton de regresar
 function backbutton(){
@@ -183,16 +185,8 @@ function getServiciosBySucursal(idSucursal){
                 
                 const prom = new Promise((resolve) => {
                     for (let i = 0; i < servicios.length; i++) {
-                        // cols += `
-                        // <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mt-4" onclick="selectTipoServicio()">
-                        //     <div class="card div-sucursales">
-                        //         <div class="card-body">
-                        //             ${servicios[i].servicio}
-                        //         </div>
-                        //     </div>
-                        // </div>`;
                         cols += `
-                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 mt-3" onclick="selectTipoServicio()">
+                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 mt-3" onclick="selectTipoServicio(${servicios[i].duracion})">
                             <div class="card div-servicios">
                                 <div class="card-body">
                                     <div class="container">
@@ -246,8 +240,9 @@ function getServiciosBySucursal(idSucursal){
 }
 
 // cargar los tipos de servicios
-function selectTipoServicio(){
+function selectTipoServicio(duration){
     steps++;
+    duracion = duration;
     let cols = ``;
     $.ajax({
         url: '../controllers/tiposervicioController.php',
@@ -324,7 +319,7 @@ function getUsuarios(){
                     for (let i = 0; i < usuarios.length; i++) {
                         cols += `
                         <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 mt-3">
-                            <div class="card div-usuarios" onclick="selecEstilista()">
+                            <div class="card div-usuarios" onclick="selecEstilista(${usuarios[i].idusuario})">
                                 <div class="card-body">
                                     <div class="container">
                                         <div class="row">
@@ -386,9 +381,10 @@ function getUsuarios(){
     });
 }
 
-function selecEstilista(){
-    steps++;
+function selecEstilista(idusuarioSeleccionado){
+    idusuario = idusuarioSeleccionado;
     if(fechaCita){
+         steps++;
         $('#usuarios').hide();
         $('#horas').show();
     }
@@ -412,4 +408,36 @@ function SelectHora(hora){
 
 function selectDepartamento(event){
     console.log(event);
+}
+
+function agendarCita(){
+    console.log(fechaCita + ' ' + horacita + ':00:00');
+    const fecha = new Date(fechaCita + ' ' + horacita + ':00');
+    console.log(fecha);
+    const end = new Date(fecha.setMinutes(fecha.getMinutes() + duracion));
+    console.log(end);
+    const cita = {
+        borderColor: '#DF8EFF',
+        backgroundColor: '#F0CAFF',
+        start: fechaCita + ' ' + horacita + ':00:00',
+        end: end.getFullYear() + '-' + end.getMonth() + '-' + end.getDay() + ' ' + end.getHours() + ':' + end.getMinutes() + ':00',
+        idcliente: 1,
+        idempleado: idusuario,
+        estado: 1,
+        nota: 'nota',
+        idsucursal: idsucursal,
+    }
+    $.ajax({
+        url: '../controllers/citaController.php',
+        type: 'POST',
+        data: {function: 'create', cita},
+        success: function(result){
+            console.log(result);
+        },
+        error: function(error) {
+            alert('Hubo un error en la peticion');
+            console.log(error);
+        }
+    });
+
 }
