@@ -1,6 +1,7 @@
 
 let steps = 1; // Variable que lleva el control de los pasos del formulario
 let idsucursal; // id de la sucursal seleccionada
+let idservicio; // id del servicio seleccionado
 let fechaCita;
 let horaCita;
 let idusuario;
@@ -21,32 +22,27 @@ function backbutton(){
             $('#categorias').show();
             steps--;
             break;
+        // case 4:
+        //     $('#tiposervicio').hide();
+        //     $('#servicios').show();
+        //     steps--;
+        //     break;
         case 4:
-            $('#tiposervicio').hide();
+            $('#usuarios').hide();
             $('#servicios').show();
             steps--;
             break;
         case 5:
-            $('#usuarios').hide();
-            $('#tiposervicio').show();
-            steps--;
-            break;
-        case 6:
             $('#horas').hide();
             $('#usuarios').show();
             steps--;
             break;
-        case 7:
+        case 6:
             $('#formulario').hide();
             $('#horas').show();
             steps--;
             break;
     }
-}
-
-// evento seleccionar fecha
-function selectFecha(event){
-    fechaCita = event.target.value;
 }
 
 // Peticion que se ejecuta al cargar la pagina
@@ -115,7 +111,7 @@ function getCategorias(idsucursall) {
                 const prom = new Promise((resolve) => {
                     for (let i = 0; i < categorias.length; i++) {
                         cols += `
-                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 mt-3" onclick="getServiciosBySucursal(${categorias[i].id})">
+                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 mt-3" onclick="getServiciosByCategoria(${categorias[i].id})">
                             <div class="card div-categorias">
                                 <div class="card-body">
                                     <div class="container">
@@ -170,23 +166,23 @@ function getCategorias(idsucursall) {
 }
 
 // Funcion que se ejecuta al seleccionar una categoria
-function getServiciosBySucursal(idSucursal){
+function getServiciosByCategoria(idcategoria){
     steps++;
     let cols = ``;
     $.ajax({
         url: '../controllers/servicioController.php',
         type: 'GET',
-        data: {function: 'getByidCategoria', id: idSucursal},
+        data: {function: 'getByidCategoria', id: idcategoria},
         success: function(result){
             let servicios;
 
             if (result !== 0){
                 servicios = JSON.parse(result);
-                
+                console.log(servicios);
                 const prom = new Promise((resolve) => {
                     for (let i = 0; i < servicios.length; i++) {
                         cols += `
-                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 mt-3" onclick="selectTipoServicio(${servicios[i].duracion})">
+                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 mt-3" onclick="getUsuarios(${servicios[i].duracion}, ${servicios[i].idprod})">
                             <div class="card div-servicios">
                                 <div class="card-body">
                                     <div class="container">
@@ -195,7 +191,7 @@ function getServiciosBySucursal(idSucursal){
                                                 <img src="../assets/img/servicios/${servicios[i].foto}" class="rounded-circle" style="max-width: 80px; min-width: 80px; max-height: 80px; min-height: 80px; border: #FFC275 3px solid;" alt="Avatar" />
                                             </div>
                                             <div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-8 mt-3">
-                                                <label style="cursor: pointer;"><strong>${servicios[i].servicio}</strong></label>
+                                                <label style="cursor: pointer;"><strong>${servicios[i].nombre}</strong></label>
                                             </div>
                                         </div>
                                     </div>
@@ -239,82 +235,61 @@ function getServiciosBySucursal(idSucursal){
     });
 }
 
-// cargar los tipos de servicios
-function selectTipoServicio(duration){
+// cargar los estilistas
+function getUsuarios(duration, idserv){
     steps++;
     duracion = duration;
-    let cols = ``;
-    $.ajax({
-        url: '../controllers/tiposervicioController.php',
-        type: 'GET',
-        data: {function: 'index'},
-        success: function(result){
-            let tiposervicio;
+    idservicio = idserv;
 
-            if (result !== 0){
-                tiposervicio = JSON.parse(result);
-                
-                const prom = new Promise((resolve) => {
-                    for (let i = 0; i < tiposervicio.length; i++) {
-                        cols += `
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mt-4" onclick="getUsuarios()">
-                            <div class="card div-sucursales">
-                                <div class="card-body">
-                                    ${tiposervicio[i].tiposervicio}
-                                </div>
-                            </div>
-                        </div>`;
-                    }
+    let html = `
+                     <div class="container">
+                         <div class="row">
+                             <div class="col-6"></div>
+                             <div class="col-6" style="text-align: right;">
+                                 <button type="button" class="btn btn-outline-primary btn-sm" onclick="backbutton()">Atrás</button>
+                             </div>
+                         </div>
+                         <div class="row mt-4">
+                             <div class="col">
+                                 <label style="font-weight: bold">Seleccione la fecha de su reserva:</label>
+                             </div>
+                             <div class="col">
+                                 <input id="inputFecha" type="date" class="form-control" onchange="selectFecha(event)">
+                             </div>
+                         </div>
+                         <div class="row mt-4">
+                             <div class="col">
+                                 <label style="font-weight: bold">Seleccione el estilista</label>
+                             </div>
+                         </div>
+                         <div id="div-users" class="row mt-4">
 
-                    resolve(cols);
-                });
-
-                prom.then(() => {
-                    let html = `
-                        <div class="container">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <h5>Selecciona el servicio</h5>
-                                    </div>
-                                    <div class="col-6" style="text-align: right;">
-                                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="backbutton()">Atrás</button>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    ${cols}
-                                </div>
-                            </div>`;
+                         </div>
+                     </div>`;
 
                     $('#servicios').hide();
-                    $('#tiposervicio').show();
-                    $('#tiposervicio').html(html);
-                });
-            }
-            else{
-                tiposervicio = false;
-            }
-        },
-        error: function(error){
-            alert('Hubo un error en la peticion');
-            console.log(error);
-        }
-    });
-}
+                    $('#usuarios').show();
+                    $('#usuarios').html(html);
+}    
 
-// cargar los estilistas
-function getUsuarios(){
-    steps++;
+// evento seleccionar fecha
+function selectFecha(event){
+    fechaCita = event.target.value;
+    fecha = new Date(fechaCita);
+    const dias = ['LU','MA','MI','JU','VI','SA','DO'];
+    console.log(idservicio, idsucursal, dias[fecha.getDay()]);
+
     let cols = ``;
     $.ajax({
         url: '../controllers/usuarioController.php',
         type: 'GET',
-        data: {function: 'getByIdSucursal', idsucursal},
+        data: {function: 'getUsuariosDisponibles', idsucursal, idservicio, dia: dias[fecha.getDay()]},
         success: function(result){
             let usuarios;
-
+            console.log(result);
             if (result !== 0){
                 usuarios = JSON.parse(result);
-                
+                console.log(usuarios)
                 const prom = new Promise((resolve) => {
                     for (let i = 0; i < usuarios.length; i++) {
                         cols += `
@@ -340,34 +315,9 @@ function getUsuarios(){
                 });
 
                 prom.then(() => {
-                    let html = `
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-6"></div>
-                            <div class="col-6" style="text-align: right;">
-                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="backbutton()">Atrás</button>
-                            </div>
-                        </div>
-                        <div class="row mt-4">
-                            <div class="col">
-                                <label style="font-weight: bold">Seleccione la fecha de su reserva:</label>
-                            </div>
-                            <div class="col">
-                                <input id="inputFecha" type="date" class="form-control" onchange="selectFecha(event)">
-                            </div>
-                        </div>
-                        <div class="row mt-4">
-                            <div class="col">
-                                <label style="font-weight: bold">Seleccione el estilista</label>
-                            </div>
-                        </div>
-                        <div class="row mt-4">
-                            ${cols}
-                    </div>`;
 
-                    $('#tiposervicio').hide();
-                    $('#usuarios').show();
-                    $('#usuarios').html(html);
+                    // $('#tiposervicio').hide();
+                    $('#div-users').html(cols);
                 });
             }
             else{
@@ -380,6 +330,7 @@ function getUsuarios(){
         }
     });
 }
+
 
 function selecEstilista(idusuarioSeleccionado){
     idusuario = idusuarioSeleccionado;
@@ -399,7 +350,6 @@ function selecEstilista(idusuarioSeleccionado){
 }
 
 function SelectHora(hora){
-    console.log(hora);
     steps++;
     horacita = hora;
     $('#horas').hide();
@@ -411,16 +361,14 @@ function selectDepartamento(event){
 }
 
 function agendarCita(){
-    console.log(fechaCita + ' ' + horacita + ':00:00');
-    const fecha = new Date(fechaCita + ' ' + horacita + ':00');
+    console.log(fechaCita + ' ' + horacita);
+    const fecha = new Date(fechaCita + ' ' + horacita);
     console.log(fecha);
-    const end = new Date(fecha.setMinutes(fecha.getMinutes() + duracion));
-    console.log(end);
     const cita = {
         borderColor: '#DF8EFF',
         backgroundColor: '#F0CAFF',
-        start: fechaCita + ' ' + horacita + ':00:00',
-        end: end.getFullYear() + '-' + end.getMonth() + '-' + end.getDay() + ' ' + end.getHours() + ':' + end.getMinutes() + ':00',
+        start: fechaCita + ' ' + horacita,
+        end: fechaCita + ' ' + horacita,
         idcliente: 1,
         idempleado: idusuario,
         estado: 1,

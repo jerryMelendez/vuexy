@@ -32,7 +32,7 @@ require ('connection.php');
 
         public function getByidCategoria($id){
             $db = new connection();// conectamos a la base de datos
-             $mysqli = mysqli_prepare($db->connect(), "select * from servicios s where s.idcategoria = ?;");
+             $mysqli = mysqli_prepare($db->connect(), "SELECT * FROM dbsgs.inventario where idcat = ?;"); // consultamos desde la tabla inventario
              $mysqli->bind_param("i", $id);
              $mysqli->execute();
  

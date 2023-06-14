@@ -15,7 +15,11 @@ if (isset($_GET['function'])) {
             $usuario = new Usuarios();
             $usuario->getByIdSucursal($_GET['idsucursal']);
             break;
-
+        
+        case 'getUsuariosDisponibles':
+            $usuario = new Usuarios();
+            $usuario->getUsuariosDisponibles($_GET['idsucursal'], $_GET['dia'], $_GET['idservicio']);
+            break;
         default:
             # code...
             break;
