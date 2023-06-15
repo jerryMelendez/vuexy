@@ -2,6 +2,7 @@
 let steps = 1; // Variable que lleva el control de los pasos del formulario
 let idsucursal; // id de la sucursal seleccionada
 let idservicio; // id del servicio seleccionado
+let nombreServicio; // nombre del servicio seleccionado para mostrarlo en el campo nota de la cita
 let fechaCita;
 let horaCita;
 let idusuario;
@@ -91,6 +92,23 @@ $( document ).ready(function() {
             console.log(error);
         }
     });
+
+    // $.ajax({
+    //     type: "POST",
+    //     url: "../controllers/clientesController.php",
+    //     data: {
+    //         function: 'getTipoCita',
+    //         whatsapp: '88',
+    //         email: 'enevaldesc@hotmail.com'
+    //     },
+    //     success: function(result) {
+    //         console.log(result)
+    //     },
+    //     error: function(error){
+    //         alert('Hubo un error en la peticion');
+    //         console.log(error);
+    //     }
+    // });
 });
 
 // Funcion que se ejecuta al seleccionar una sucursal
@@ -182,7 +200,7 @@ function getServiciosByCategoria(idcategoria){
                 const prom = new Promise((resolve) => {
                     for (let i = 0; i < servicios.length; i++) {
                         cols += `
-                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 mt-3" onclick="getUsuarios(${servicios[i].duracion}, ${servicios[i].idprod})">
+                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 mt-3" onclick="getUsuarios(${servicios[i].idprod}, '${servicios[i].nombre}')">
                             <div class="card div-servicios">
                                 <div class="card-body">
                                     <div class="container">
@@ -236,10 +254,11 @@ function getServiciosByCategoria(idcategoria){
 }
 
 // cargar los estilistas
-function getUsuarios(duration, idserv){
+function getUsuarios(idserv, nombreserv){
+    console.log(idserv, nombreserv);
     steps++;
-    duracion = duration;
     idservicio = idserv;
+    nombreServicio = nombreserv;
 
     let html = `
                      <div class="container">
@@ -364,16 +383,23 @@ function agendarCita(){
     console.log(fechaCita + ' ' + horacita);
     const fecha = new Date(fechaCita + ' ' + horacita);
     console.log(fecha);
+
+    // Faltan los campos idcliente y tipo, estos se establecen al comprobar 
+    // que si el cliente esta registrado o no
     const cita = {
-        borderColor: '#DF8EFF',
-        backgroundColor: '#F0CAFF',
+        borderColor: '#B6CF02',
+        backgroundColor: '#B6CF02',
         start: fechaCita + ' ' + horacita,
         end: fechaCita + ' ' + horacita,
-        idcliente: 1,
         idempleado: idusuario,
-        estado: 1,
-        nota: 'nota',
+        estado: 1, // agendado
+        origen: 2, // origen web
+        nota: 'Un servicio de ' + nombreServicio + ' agendado desde la web',
         idsucursal: idsucursal,
+        nombre_cliente: $('#nombreCliente').val(),
+        whatsapp: $('#whatsapp').val(),
+        email_cliente: $('#email_cliente').val(),
+        id_departamento: $('#Departamento').val(),
     }
     $.ajax({
         url: '../controllers/citaController.php',
