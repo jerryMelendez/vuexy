@@ -12,7 +12,10 @@ if (isset($_POST['function'])) {
             $citas = new Citas();
             $citas->create($_POST['cita']);
             break;
-        
+        case 'getHorasOcupadas':
+            $citas = new Citas();
+            $citas->getHorasOcupadas($_POST['fecha'], $_POST['idempleado']);
+            break;
         default:
             # code...
             break;

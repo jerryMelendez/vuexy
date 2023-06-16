@@ -16,6 +16,21 @@
     <nav class="navbar navbar-expand-lg navbar-light"  style="background-color: #54BFF4;">
         <a class="navbar-brand" href="#"></a>
     </nav>
+    <div id="inicio">
+        <div class="container">
+            <br><br><br>
+            <div class="row">
+                <div class="col" style="text-align: center;">
+                    <h2>Agenda tu cita</h2>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col" style="text-align: center;">
+                    <button class="btn btn-primary" onclick="showSucursales()">Comenzar-></button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div id="sucursales" class="mt-5"></div>
     <div id="categorias" class="mt-5"></div>
     <div id="servicios" class="mt-5"></div>
@@ -32,87 +47,87 @@
         </div>
         <div class="row">
             <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-6 mt-4">
-                <div class="card div-horas" onclick="SelectHora('08:00')">
-                    <label class="centrarHora">8 am</label>
+                <div id="08" class="card div-horas" onclick="SelectHora('08:00')">
+                    <label id="label08" class="centrarHora">8 am</label>
                 </div>
             </div>
             <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-6 mt-4">
-                <div class="card div-horas" onclick="SelectHora('08:30')">
-                    <label class="centrarHora">8:30 am</label>
+                <div id="0830" class="card div-horas" onclick="SelectHora('08:30')">
+                    <label id="label0830" class="centrarHora">8:30 am</label>
                 </div>
             </div>
             <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-6 mt-4">
-                <div class="card div-horas" onclick="SelectHora('09:00')">
-                    <label class="centrarHora">9 am</label>
+                <div id="09" class="card div-horas" onclick="SelectHora('09:00')">
+                    <label id="label09" class="centrarHora">9 am</label>
                 </div>
             </div>
             <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-6 mt-4">
-                <div class="card div-horas" onclick="SelectHora('09:30')">
-                    <label class="centrarHora">9:30 am</label>
+                <div id="0930" class="card div-horas" onclick="SelectHora('09:30')">
+                    <label id="label0930" class="centrarHora">9:30 am</label>
                 </div>
             </div>
             <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-6 mt-4">
-                <div class="card div-horas" onclick="SelectHora('10:00')">
-                    <label class="centrarHora">10 am</label>
+                <div id="10" class="card div-horas" onclick="SelectHora('10:00')">
+                    <label id="label10" class="centrarHora">10 am</label>
                 </div>
             </div>
             <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-6 mt-4">
-                <div class="card div-horas" onclick="SelectHora('10:30')">
-                    <label class="centrarHora">10:30 am</label>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-6 mt-4">
-                <div class="card div-horas" onclick="SelectHora('11:00')">
-                    <label class="centrarHora">11 am</label>
-                </div>
-            </div>
-            <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-6 mt-4">
-                <div class="card div-horas" onclick="SelectHora('11:30')">
-                    <label class="centrarHora">11:30 pm</label>
-                </div>
-            </div>
-            <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-6 mt-4">
-                <div class="card div-horas" onclick="SelectHora('13:00')">
-                    <label class="centrarHora">1 pm</label>
-                </div>
-            </div>
-            <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-6 mt-4">
-                <div class="card div-horas" onclick="SelectHora('13:30')">
-                    <label class="centrarHora">1:30 am</label>
-                </div>
-            </div>
-            <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-6 mt-4">
-                <div class="card div-horas" onclick="SelectHora('14:00')">
-                    <label class="centrarHora">2 pm</label>
-                </div>
-            </div>
-            <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-6 mt-4">
-                <div class="card div-horas" onclick="SelectHora('14:30')">
-                    <label class="centrarHora">2:30 pm</label>
+                <div id="1030" class="card div-horas" onclick="SelectHora('10:30')">
+                    <label id="label103-" class="centrarHora">10:30 am</label>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-6 mt-4">
-                <div class="card div-horas" onclick="SelectHora('15:00')">
-                    <label class="centrarHora">3 pm</label>
+                <div id="11" class="card div-horas" onclick="SelectHora('11:00')">
+                    <label id="label11" class="centrarHora">11 am</label>
                 </div>
             </div>
             <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-6 mt-4">
-                <div class="card div-horas" onclick="SelectHora('15:30')">
-                    <label class="centrarHora">3:30 pm</label>
+                <div id="1130" class="card div-horas" onclick="SelectHora('11:30')">
+                    <label id="label1130" class="centrarHora">11:30 pm</label>
                 </div>
             </div>
             <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-6 mt-4">
-                <div class="card div-horas" onclick="SelectHora('16:00')">
-                    <label class="centrarHora">4 pm</label>
+                <div id="13" class="card div-horas" onclick="SelectHora('13:00')">
+                    <label id="label13" class="centrarHora">1 pm</label>
                 </div>
             </div>
             <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-6 mt-4">
-                <div class="card div-horas" onclick="SelectHora('16:30')">
-                    <label class="centrarHora">4:30 pm</label>
+                <div id="1330" class="card div-horas" onclick="SelectHora('13:30')">
+                    <label id="label1330" class="centrarHora">1:30 am</label>
+                </div>
+            </div>
+            <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-6 mt-4">
+                <div id="14" class="card div-horas" onclick="SelectHora('14:00')">
+                    <label id="label14" class="centrarHora">2 pm</label>
+                </div>
+            </div>
+            <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-6 mt-4">
+                <div id="1430" class="card div-horas" onclick="SelectHora('14:30')">
+                    <label id="label1430" class="centrarHora">2:30 pm</label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-6 mt-4">
+                <div id="15" class="card div-horas" onclick="SelectHora('15:00')">
+                    <label id="label15" class="centrarHora">3 pm</label>
+                </div>
+            </div>
+            <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-6 mt-4">
+                <div id="1530" class="card div-horas" onclick="SelectHora('15:30')">
+                    <label id="label1530" class="centrarHora">3:30 pm</label>
+                </div>
+            </div>
+            <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-6 mt-4">
+                <div id="16" class="card div-horas" onclick="SelectHora('16:00')">
+                    <label id="label16" class="centrarHora">4 pm</label>
+                </div>
+            </div>
+            <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-6 mt-4">
+                <div id="1630" class="card div-horas" onclick="SelectHora('16:30')">
+                    <label id="label1630" class="centrarHora">4:30 pm</label>
                 </div>
             </div>
         </div>
@@ -189,6 +204,52 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="info">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <h5 style="width: 100%; text-align: center;">Información de la cita</h5>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col">
+                    <table style="width: 100%;">
+                        <tbody style="font-weight: bold;">
+                            <tr class="row-style">
+                                <td><label>Sucursal:</label></td>
+                                <td><label id="infoSucursal"></label></td>
+                            </tr>
+                            <tr>
+                                <td><label>Categoría:</label></td>
+                                <td><label id="infoCategoria"></label></td>
+                            </tr>
+                            <tr class="row-style">
+                                <td><label>Servicio:</label></td>
+                                <td><label id="infoServicio"></label></td>
+                            </tr>
+                            <tr>
+                                <td><label>Fecha:</label></td>
+                                <td><label id="infoFecha"></label></td>
+                            </tr>
+                            <tr class="row-style">
+                                <td><label>Estilista:</label></td>
+                                <td><label id="infoEstilista"></label></td>
+                            </tr>
+                            <tr>
+                                <td><label>Cliente:</label></td>
+                                <td><label id="infoCliente"></label></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col" style="text-align: center;">
+                    <button type="button" class="btn btn-primary" onclick="location.reload();">Aceptar</button>
                 </div>
             </div>
         </div>
