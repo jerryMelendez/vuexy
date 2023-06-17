@@ -442,6 +442,28 @@ function agendarCita(){
                             $('#infoCliente').text($('#nombreCliente').val());
                             $('#formulario').hide();
                             $('#info').show();
+
+                            // Enviamos el email al cliente
+                            $.ajax({
+                                type: "POST",
+                                url: "../controllers/clientesController.php",
+                                data:{
+                                    function: 'sendEmail',
+                                    email: $('#email_cliente').val(),
+                                    sucursal: nombreSucursal,
+                                    categoria: nombreCategoria,
+                                    servicio: nombreServicio,
+                                    fecha: arrayFecha[2] + '/' + arrayFecha[1] + '/' + arrayFecha[0] + ' ' + horacita,
+                                    estilista: nombreEstilista,
+                                    cliente: $('#nombreCliente').val()
+                                },
+                                success: function(result){
+                                    // console.log(result);
+                                },
+                                error: function(error){
+                                    // console.log(error);
+                                }
+                            })
                         }
                     },
                     error: function(error) {

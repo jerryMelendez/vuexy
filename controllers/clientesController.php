@@ -9,10 +9,13 @@ if (isset($_POST['function'])) {
     switch ($_POST['function']) {
         case 'getTipoCita':
             # code...
-            $citas = new Citas();
-            $citas->getTipoCita($_POST['whatsapp'], $_POST['email']);
+            $cliente = new Cliente();
+            $cliente->getTipoCita($_POST['whatsapp'], $_POST['email']);
             break;
-        
+        case 'sendEmail':
+            $cliente = new Cliente();
+            $cliente->sendEmail($_POST['email'], $_POST['sucursal'], $_POST['categoria'], $_POST['servicio'], $_POST['fecha'], $_POST['estilista'], $_POST['cliente']);
+            break;
         default:
             # code...
             break;
