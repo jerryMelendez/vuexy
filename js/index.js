@@ -11,6 +11,8 @@ let duracion;
 let nombreCategoria; // nombre de la categoria seleccionada para mostrarlo en la info de la cita
 let nombreEstilista; // nombre del estilista seleccionado para mostrarlo en la info de la cita
 let arrayFecha; // arreglo que contiene la fecha de la cita
+let departamentos = [];
+let municipios = [];
 
 
 $('#sucursales').hide();
@@ -380,12 +382,52 @@ function selecEstilista(idusuarioSeleccionado, nombreEst){
 function SelectHora(hora){
     steps++;
     horacita = hora;
+    $.ajax({
+        url: '../controllers/departamentoController.php',
+        type: 'GET',
+        data: {function: 'index'},
+        success: function(result){
+            arrayDepartamentos = JSON.parse(result);
+            for (let i = 0; i < arrayDepartamentos.length; i++) {
+                $('#Departamento').append($('<option>', { 
+                    value: arrayDepartamentos[i].iddepartamento,
+                    text : arrayDepartamentos[i].nombre
+                }));
+                
+            }
+            
+        },
+        error: function(error){
+            console.log(error);
+        }
+    });
     $('#horas').hide();
     $('#formulario').show();
 }
 
 function selectDepartamento(event){
-    console.log(event);
+    console.log(event.target.value);
+    $('#Municipio').empty();
+    $.ajax({
+        url: '../controllers/municipioController.php',
+        type: 'GET',
+        data: {function: 'getByDepartamento', iddepartamento: event.target.value},
+        success: function(result){
+            arrayMunicipios = JSON.parse(result);
+            for (let i = 0; i < arrayMunicipios.length; i++) {
+                $('#Municipio').append($('<option>', { 
+                    value: arrayMunicipios[i].idmunicipios,
+                    text : arrayMunicipios[i].nombre
+                }));
+                
+            }
+            
+        },
+        error: function(error){
+            console.log(error);
+        }
+    });
+
 }
 
 function agendarCita(){
@@ -409,12 +451,13 @@ function agendarCita(){
         whatsapp: $('#whatsapp').val(),
         email_cliente: $('#email_cliente').val(),
         id_departamento: $('#Departamento').val(),
+        id_municipio: $('#Municipio').val()
     }
 
     Swal.fire({
             icon: 'question',
             title: '¿Desea agendar esta cita?',
-            text: 'Se agendará una cita para el día ' + arrayFecha[2] + '/' + arrayFecha[1] + '/' + arrayFecha[0] + ' a las ' + horacita + ' con el estilista ' + nombreEstilista
+            text: 'Se agendará una cita para el cliente '+$('#nombreCliente').val()+' el día ' + arrayFecha[2] + '/' + arrayFecha[1] + '/' + arrayFecha[0] + ' a las ' + horacita + ' con el estilista ' + nombreEstilista
             + ' para el servicio de ' + nombreServicio,
             showCancelButton: true,
             confirmButtonText: `Agendar`,
@@ -433,13 +476,14 @@ function agendarCita(){
                                 title: 'Cita agendada',
                                 text: 'Su cita ha sido agendada correctamente',
                               });
-            
+                            console.log('horaCita: ' + horacita);
+                            $('#parrafoDetalleCita').text('Muchas gracias ' + $('#nombreCliente').val() + ' por realizar una reservación de nuestros servicios a continuación se muestran los detalles de la cita, puede revisar su correo electrónico donde le hemos enviado estos datos');
                             $('#infoSucursal').text(nombreSucursal);
                             $('#infoCategoria').text(nombreCategoria);
                             $('#infoServicio').text(nombreServicio);
-                            $('#infoFecha').text(arrayFecha[2] + '/' + arrayFecha[1] + '/' + arrayFecha[0] + ' ' + horacita);
+                            $('#infoFecha').text(arrayFecha[2] + '/' + arrayFecha[1] + '/' + arrayFecha[0]);
+                            $('#infoHora').text(horacita + (horacita.startsWith('0') || horacita.startsWith('10') || horacita.startsWith('11') ? ' am' : ' pm   '));
                             $('#infoEstilista').text(nombreEstilista);
-                            $('#infoCliente').text($('#nombreCliente').val());
                             $('#formulario').hide();
                             $('#info').show();
 
@@ -481,9 +525,6 @@ function agendarCita(){
 
 }
 
-function alertQuestion(){
-
-}
 
 // Funcion para deshabilitar las horas que ya estan ocupadas
 function comprobarHoras(horas){

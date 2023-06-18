@@ -41,7 +41,7 @@ require('connection.php');
             $db = new connection();// conectamos a la base de datos
 
             $mysqli = mysqli_prepare($db->connect(), "SELECT * FROM clientes where cel_whatsapp = ? or email = ?");
-            $mysqli->bind_param("ss", $cita['whatsapp'], $cita['email']);
+            $mysqli->bind_param("ss", $cita['whatsapp'], $cita['email_cliente']);
             $mysqli->execute();
 
             $result = $mysqli->get_result();
@@ -68,9 +68,9 @@ require('connection.php');
             else {
                 // guardar el cliente en la base de datos
                 $mysqli = mysqli_prepare($db->connect(), "INSERT INTO `dbsgs`.`clientes` (`nombre`, `cel_claro`, `cel_tigo`, `cel_whatsapp`, `cedula`, `fecha_nacimiento`, `edad`, `email`, `fecha_alta`, `iddepartamento`, `idmunicipio`, `barrio`, `foto`, `estado`) 
-                VALUES (?, ' ', ' ', ?, '', '2000-01-01', '23', ?, '2023-01-01', ?, '1', ' ', ' ', '1');");
+                VALUES (?, ' ', ' ', ?, '', '1900-01-01', '23', ?, '".date('Y-m-d')."', ?, ?, ' ', ' ', '1');");
 
-                $mysqli->bind_param("ssss", $cita['nombre_cliente'], $cita['whatsapp'], $cita['email_cliente'], $cita['id_departamento']);
+                $mysqli->bind_param("sssss", $cita['nombre_cliente'], $cita['whatsapp'], $cita['email_cliente'], $cita['id_departamento'], $cita['id_municipio']);
                 $mysqli->execute();
 
                 $resultInsertCliente = $mysqli->get_result();

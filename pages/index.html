@@ -177,23 +177,14 @@
                                     <div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-12">
                                         <select id="Departamento" class="form-select" aria-label="Default select example" onchange="selectDepartamento(event)">
                                             <!-- el value seria el id del departamento -->
-                                            <option selected>Seleccione un departamento</option>
-                                            <option value="1">Managua</option>
-                                            <option value="2">Boaco</option>
-                                            <option value="3">Carazo</option>
-                                            <option value="4">Chinandega</option>
-                                            <option value="5">Estelí</option>
-                                            <option value="6">Granada</option>
-                                            <option value="7">Jinotega</option>
-                                            <option value="8">Leon</option>
-                                            <option value="9">Madriz</option>
-                                            <option value="10">Masaya</option>
-                                            <option value="11">Matagalpa</option>
-                                            <option value="12">Nueva Segovia</option>
-                                            <option value="13">Rivas</option>
-                                            <option value="14">Rio San Juan</option>
-                                            <option value="15">R. Autonoma Del atlántico Norte</option>
-                                            <option value="16">R. Autonoma Del atlántico Sur</option>
+                                          </select>
+                                    </div>
+                                </div>
+                                <div class="row mt-4">
+                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12"><label>Municipio</label></div>
+                                    <div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-12">
+                                        <select id="Municipio" class="form-select" aria-label="Default select example">
+                                            <!-- el value seria el id del departamento -->
                                           </select>
                                     </div>
                                 </div>
@@ -211,50 +202,54 @@
     </div>
     <div id="info">
         <div class="container">
-            <div class="row">
+            <div class="row mt-5">
                 <div class="col">
-                    <h5 style="width: 100%; text-align: center;">Información de la cita</h5>
+                    <p id="parrafoDetalleCita" style="font-size: 18px;"></p>
                 </div>
             </div>
             <div class="row mt-4">
                 <div class="col">
-                    <table style="width: 100%;">
-                        <tbody style="font-weight: bold;">
-                            <tr class="row-style">
-                                <td><label>Sucursal:</label></td>
-                                <td><label id="infoSucursal"></label></td>
-                            </tr>
-                            <tr>
-                                <td><label>Categoría:</label></td>
-                                <td><label id="infoCategoria"></label></td>
-                            </tr>
-                            <tr class="row-style">
-                                <td><label>Servicio:</label></td>
-                                <td><label id="infoServicio"></label></td>
-                            </tr>
-                            <tr>
-                                <td><label>Fecha:</label></td>
-                                <td><label id="infoFecha"></label></td>
-                            </tr>
-                            <tr class="row-style">
-                                <td><label>Estilista:</label></td>
-                                <td><label id="infoEstilista"></label></td>
-                            </tr>
-                            <tr>
-                                <td><label>Cliente:</label></td>
-                                <td><label id="infoCliente"></label></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="card">
+                        <div class="card-body">
+                            <table style="width: 100%;">
+                                <tbody style="font-weight: bold;">
+                                    <tr class="row-style">
+                                        <td><label>Sucursal:</label></td>
+                                        <td><label id="infoSucursal"></label></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>Categoría:</label></td>
+                                        <td><label id="infoCategoria"></label></td>
+                                    </tr>
+                                    <tr class="row-style">
+                                        <td><label>Servicio:</label></td>
+                                        <td><label id="infoServicio"></label></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>Fecha:</label></td>
+                                        <td><label id="infoFecha"></label></td>
+                                    </tr>
+                                    <tr class="row-style">
+                                        <td><label>Hora:</label></td>
+                                        <td><label id="infoHora"></label></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>Estilista:</label></td>
+                                        <td><label id="infoEstilista"></label></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row mt-5">
                 <div class="col" style="text-align: center;">
                     <button type="button" class="btn btn-primary" onclick="location.reload();">Aceptar</button>
                 </div>
             </div>
         </div>
     </div>
+    <script src="../js/index.js"></script>
 </body>
 </html>
-<script src="../js/index.js"></script>

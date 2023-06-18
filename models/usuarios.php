@@ -65,6 +65,7 @@ require('connection.php');
                         on u.idusuario = h.idusuario
                         where us.idservicio = ?
                         and u.idsucursal = ?
+                        and u.rolid = 4
                         and h.".$dia." = 1;";
             
              $mysqli = mysqli_prepare($db->connect(), $query);
