@@ -387,6 +387,7 @@ function SelectHora(hora){
         type: 'GET',
         data: {function: 'index'},
         success: function(result){
+            console.log(result);
             arrayDepartamentos = JSON.parse(result);
             for (let i = 0; i < arrayDepartamentos.length; i++) {
                 $('#Departamento').append($('<option>', { 
@@ -451,7 +452,8 @@ function agendarCita(){
         whatsapp: $('#whatsapp').val(),
         email_cliente: $('#email_cliente').val(),
         id_departamento: $('#Departamento').val(),
-        id_municipio: $('#Municipio').val()
+        id_municipio: $('#Municipio').val(),
+        id_servicio: idservicio
     }
 
     Swal.fire({

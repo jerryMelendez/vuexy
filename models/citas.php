@@ -92,6 +92,17 @@ require('connection.php');
                     $mysqli->execute();
 
                     $result = $mysqli->get_result();
+
+                    $idCita = $mysqli->insert_id;
+
+                    // Guardar en la tabla citas_servicios
+                    $query = "INSERT into citas_servicios(idcita, idservicio) VALUES(?, ?)";
+                    $mysqliCitaServ = mysqli_prepare($db->connect(), $query);
+                    $mysqliCitaServ->bind_param("ii", $idCita, $cita['id_servicio']);
+                    $mysqliCitaServ->execute();
+
+                    $resultCitaServ = $mysqliCitaServ->get_result();
+
                 
                     $mysqli->close();
                     echo("Cita creada correctamente");
