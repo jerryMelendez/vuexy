@@ -24,78 +24,79 @@
 .div-sucursales {
 	cursor: pointer;
 	transition: transform 0.3s ease; /* Agrega una transición suave al efecto */
+	border:#B7EC00 2px solid;
+	color: #727f00
 }
   
 .div-sucursales:hover {
-	background-color: #B6DDFF;
-	transform: scale(1.05); /* Escala el div al 120% de su tamaño original */
+	/* background-color: #B6DDFF; */
+	transform: scale(1.035); /* Escala el div al 120% de su tamaño original */
 }
 
 .div-sucursales:active {
-	background-color: #6ABBFF;
-	transform: scale(1.025); /* Escala el div al 90% de su tamaño original durante el clic */
+	/* background-color: #6ABBFF; */
+	transform: scale(1.015); /* Escala el div al 90% de su tamaño original durante el clic */
   }
 
 .div-usuarios {
 	cursor: pointer;
 	transition: transform 0.3s ease; /* Agrega una transición suave al efecto */
+	border:#B7EC00 2px solid;
+	color: #727f00
 }
   
 .div-usuarios:hover {
-	background-color: #B9FFB6;
-	transform: scale(1.05); /* Escala el div al 120% de su tamaño original */
+	transform: scale(1.035); /* Escala el div al 120% de su tamaño original */
 }
 
 .div-usuarios:active {
-	background-color: #87FF81;
-	transform: scale(1.025); /* Escala el div al 90% de su tamaño original durante el clic */
+	transform: scale(1.015); /* Escala el div al 90% de su tamaño original durante el clic */
 }
 
 .div-categorias {
 	cursor: pointer;
 	transition: transform 0.3s ease; /* Agrega una transición suave al efecto */
+	border:#B7EC00 2px solid;
+	color: #727f00
 }
   
 .div-categorias:hover {
-	background-color: #fff9e8;
-	transform: scale(1.05); /* Escala el div al 120% de su tamaño original */
+	transform: scale(1.035); /* Escala el div al 120% de su tamaño original */
 }
 
 .div-categorias:active {
-	background-color: #ffefa7;
-	transform: scale(1.025); /* Escala el div al 90% de su tamaño original durante el clic */
+	transform: scale(1.015); /* Escala el div al 90% de su tamaño original durante el clic */
 }
 
 .div-servicios {
 	cursor: pointer;
 	transition: transform 0.3s ease; /* Agrega una transición suave al efecto */
+	border:#B7EC00 2px solid;
+	color: #727f00
 }
   
 .div-servicios:hover {
-	background-color: #ffe8e8;
-	transform: scale(1.05); /* Escala el div al 120% de su tamaño original */
+	transform: scale(1.035); /* Escala el div al 120% de su tamaño original */
 }
 
 .div-servicios:active {
-	background-color: #ffa7a7;
-	transform: scale(1.025); /* Escala el div al 90% de su tamaño original durante el clic */
+	transform: scale(1.015); /* Escala el div al 90% de su tamaño original durante el clic */
 }
 
 .div-horas {
 	height: 50px;
 	cursor: pointer;
 	transition: transform 0.3s ease; /* Agrega una transición suave al efecto */
-	border: #efc7ff 3px solid;
+	border:#B7EC00 2px solid;
+	color: #727f00
 }
   
 .div-horas:hover {
-	background-color: #F0CAFF;
-	transform: scale(1.05); /* Escala el div al 120% de su tamaño original */
+	transform: scale(1.035); /* Escala el div al 120% de su tamaño original */
 }
 
 .div-horas:active {
-	background-color: #DF8EFF;
-	transform: scale(1.025); /* Escala el div al 90% de su tamaño original durante el clic */
+	transform: scale(1.015); /* Escala el div al 90% de su tamaño original durante el clic */
 }
 
 .centrarHora{
@@ -113,7 +114,7 @@
 	color: gray; background-color: rgb(243, 243, 243);
 }
 
-.row-bigger{
+  .row-bigger{
 	min-height: 50px;
   }
   
@@ -133,6 +134,23 @@
 	background: rgb(228,228,228);
 	background: linear-gradient(180deg, rgba(228,228,228,1) 4%, rgba(255,255,255,1) 4%, rgba(255,255,255,1) 14%, rgba(228,228,228,1) 14%, rgba(228,228,228,1) 86%, rgba(255,255,255,1) 86%, rgba(255,255,255,1) 95%, rgba(228,228,228,1) 95%);
   }
+
+  .btn-atras {
+	cursor: pointer;
+	transition: transform 0.3s ease; /* Agrega una transición suave al efecto */
+	border:#B7EC00 2px solid;
+	border-radius: 10px;
+	background-color: white;
+	color: #727f00;
+	padding-left: 30px;
+	padding-right: 30px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+  
+.btn-atras:hover {
+	transform: scale(1.035); /* Escala el div al 103.5% de su tamaño original */
+}
 /* h1, h2, h3, h4, h5, h6 {
 	font-family: 'Public Sans';
 }
