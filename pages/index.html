@@ -36,16 +36,16 @@
     <div id="sucursales" class="mt-5"></div>
     <div id="categorias" class="mt-5"></div>
     <div id="servicios" class="mt-5"></div>
-    <!-- <div id="tiposervicio" class="mt-5"></div> -->
+    <div id="tiposervicio" class="mt-5"></div>
     <div id="usuarios" class="mt-5"></div>
     <div id="horas"><div class="container">
         <div class="row mt-5">
-            <div class="col">
+            <div class="col" style="text-align: center;">
                 <h5>Seleccione la hora de su cita</h5>
             </div>
-            <div class="col" style="text-align: right;">
+            <!-- <div class="col" style="text-align: right;">
                 <button type="button" class="btn btn-outline-primary btn-sm" onclick="backbutton()">Atrás</button>
-            </div>
+            </div> -->
         </div>
         <div class="row">
             <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-6 mt-4">
@@ -137,12 +137,12 @@
     <div id="formulario">
         <div class="container">
             <div class="row mt-5">
-                <div class="col">
+                <div class="col" style="text-align: center;">
                     <h5>Ingrese sus datos</h5>
                 </div>
-                <div class="col" style="text-align: right;">
+                <!-- <div class="col" style="text-align: right;">
                     <button type="button" class="btn btn-outline-primary btn-sm" onclick="backbutton()">Atrás</button>
-                </div>
+                </div> -->
             </div>
             <div class="row mt-4">
                 <div class="col">
@@ -154,7 +154,7 @@
                                         <label>Nombre completo</label>
                                     </div>
                                     <div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-12">
-                                        <input id="nombreCliente" type="text" class="form-control">
+                                        <input id="nombreCliente" type="text" class="form-control" style="border:#B7EC00 2px solid;">
                                     </div>
                                 </div>
                                 <div class="row mt-4">
@@ -162,7 +162,7 @@
                                         <label>Whatsapp</label>
                                     </div>
                                     <div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-12">
-                                        <input id="whatsapp" type="number" class="form-control">
+                                        <input id="whatsapp" type="number" class="form-control" style="border:#B7EC00 2px solid;">
                                     </div>
                                 </div>
                                 <div class="row mt-4">
@@ -170,13 +170,13 @@
                                         <label>Correo</label>
                                     </div>
                                     <div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-12">
-                                        <input id="email_cliente" type="email" class="form-control">
+                                        <input id="email_cliente" type="email" class="form-control" style="border:#B7EC00 2px solid;">
                                     </div>
                                 </div>
                                 <div class="row mt-4">
                                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12"><label>Departamento</label></div>
                                     <div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-12">
-                                        <select id="Departamento" class="form-select" aria-label="Default select example" onchange="selectDepartamento(event)">
+                                        <select id="Departamento" class="form-select" aria-label="Default select example" onchange="selectDepartamento(event)" style="border:#B7EC00 2px solid;">
                                             <!-- el value seria el id del departamento -->
                                           </select>
                                     </div>
@@ -184,14 +184,14 @@
                                 <div class="row mt-4">
                                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12"><label>Municipio</label></div>
                                     <div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-12">
-                                        <select id="Municipio" class="form-select" aria-label="Default select example">
+                                        <select id="Municipio" class="form-select" aria-label="Default select example" style="border:#B7EC00 2px solid;">
                                             <!-- el value seria el id del departamento -->
                                           </select>
                                     </div>
                                 </div>
                                 <div class="row mt-5">
                                     <div class="col" style="text-align: center;">
-                                        <button type="button" class="btn btn-primary" onclick="agendarCita()">Enviar</button>
+                                        <button type="button" style="background-color: #B7EC00; border:#B7EC00 1px solid; width: 100px; height: 50px; margin-top: 50px;" onclick="agendarCita()"><label style="color: white;">Enviar</label></button>
                                     </div>
                                 </div>
                             </div>
@@ -246,7 +246,7 @@
             </div>
             <div class="row mt-5">
                 <div class="col" style="text-align: center;">
-                    <button type="button" class="btn btn-primary" onclick="location.reload();">Aceptar</button>
+                    <button type="button" style="background-color: #B7EC00; border:#B7EC00 1px solid; width: 100px; height: 50px; margin-top: 50px;" onclick="location.reload();">Aceptar</button>
                 </div>
             </div>
         </div>

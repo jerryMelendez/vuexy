@@ -84,15 +84,20 @@ $( document ).ready(function() {
 
             let html = `
                         <div class="container">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <h5>Selecciona la sucursal</h5>
+                            <div class="row">
+                                <div class="col-12" style="text-align: center;">
+                                    <img src="../assets/img/pages/logo.jpg" alt="lashes" style="width: 200px; height: auto;">
+                                </div>
+                            </div>
+                                <div class="row mt-4">
+                                    <div class="col-12" style="text-align: center;">
+                                        <h5>Elija una sucursal</h5>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row mt-4">
                                     ${cols}
-                                </div>
-                            </div>`;
+                            </div>
+                         </div>`;
             $('#sucursales').html(html);
         },
         error: function(error){
@@ -121,7 +126,7 @@ function getCategorias(idsucursall, nombreSuc) {
                 const prom = new Promise((resolve) => {
                     for (let i = 0; i < categorias.length; i++) {
                         cols += `
-                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 mt-3" onclick="getServiciosByCategoria(${categorias[i].id}, '${categorias[i].nombrecat}')">
+                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 mt-3" onclick="getTipoServicio(${categorias[i].id}, '${categorias[i].nombrecat}')">
                             <div class="card div-categorias">
                                 <div class="card-body">
                                     <div class="container">
@@ -145,12 +150,21 @@ function getCategorias(idsucursall, nombreSuc) {
                 prom.then(() => {
                     let html = `
                         <div class="container">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <h5>Selecciona la categoría</h5>
+                                <!-- <div class="row">
+                                    <div class="col">
+                                        <div class="col" style="text-align: right;">
+                                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="backbutton()">Atrás</button>
+                                        </div>
                                     </div>
-                                    <div class="col-6" style="text-align: right;">
-                                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="backbutton()">Atrás</button>
+                                </div> -->
+                                <div class="row">
+                                    <div class="col-12" style="text-align: center;">
+                                        <img src="../assets/img/pages/logo.jpg" alt="lashes" style="width: 200px; height: auto;">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col" style="text-align: center;">
+                                        <h5>Selecciona el tipo de trabajo</h5>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -173,6 +187,82 @@ function getCategorias(idsucursall, nombreSuc) {
         }
 
     });
+}
+
+// Obtener tipo de servicios
+function getTipoServicio(idcategoria, nombreCat){
+    if (nombreCat.includes('Pestañas') || nombreCat.includes('Cejas') || nombreCat.includes('Párpados') || nombreCat.includes('Labios'))
+    {
+        let cols = ``;
+        $.ajax({
+            url: '../controllers/tiposervicioController.php',
+            type: 'GET',
+            data: {function: 'index'},
+            success: function(result){
+                console.log(JSON.parse(result));
+                let tipoServicios = [];
+
+                if (result !== 0){
+                    tipoServicios = JSON.parse(result);
+                    const prom = new Promise((resolve) => {
+                        for (let i = 0; i < tipoServicios.length; i++) {
+                            cols += `
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 mt-3" onclick="getServiciosByCategoria(${idcategoria}, '${nombreCat}')">
+                                <div class="card div-servicios">
+                                    <div class="card-body">
+                                        <div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-8 mt-3">
+                                            <label style="cursor: pointer;"><strong>${tipoServicios[i].tiposervicio}</strong></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
+                        }
+    
+                        resolve(cols);
+                    });
+    
+                    prom.then(() => {
+                        let html = `
+                            <div class="container">
+                                    <!-- <div class="row">
+                                        <div class="col" style="text-align: right;">
+                                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="backbutton()">Atrás</button>
+                                        </div>
+                                    </div> -->
+                                    <div class="row">
+                                        <div class="col-12" style="text-align: center;">
+                                            <img src="../assets/img/pages/logo.jpg" alt="lashes" style="width: 200px; height: auto;">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <h5>Elija el tipo de trabajo</h5>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        ${cols}
+                                    </div>
+                                </div>`;
+    
+                        $('#categorias').hide();
+                        $('#tiposervicio').show();
+                        $('#tiposervicio').html(html);
+                    });
+                }
+                else{
+                    servicios = false;
+                }
+            },
+            error: function(error){
+                alert('Hubo un error en la peticion');
+                console.log(error);
+            }
+        })
+    }
+    else
+    {
+        getServiciosByCategoria(idcategoria, nombreCat);
+    }
 }
 
 // Funcion que se ejecuta al seleccionar una categoria
@@ -217,12 +307,19 @@ function getServiciosByCategoria(idcategoria, nombreCat){
                 prom.then(() => {
                     let html = `
                         <div class="container">
+                                <!-- <div class="row">
+                                    <div class="col" style="text-align: right;">
+                                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="backbutton()">Atrás</button>
+                                    </div>
+                                </div> -->
+                                <div class="row">
+                                    <div class="col-12" style="text-align: center;">
+                                        <img src="../assets/img/pages/logo.jpg" alt="lashes" style="width: 200px; height: auto;">
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col-6">
                                         <h5>Selecciona el servicio</h5>
-                                    </div>
-                                    <div class="col-6" style="text-align: right;">
-                                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="backbutton()">Atrás</button>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -231,6 +328,7 @@ function getServiciosByCategoria(idcategoria, nombreCat){
                             </div>`;
 
                     $('#categorias').hide();
+                    $('#tiposervicio').hide();
                     $('#servicios').show();
                     $('#servicios').html(html);
                 });
@@ -255,23 +353,28 @@ function getUsuarios(idserv, nombreserv){
 
     let html = `
                      <div class="container">
-                         <div class="row">
+                         <!-- <div class="row">
                              <div class="col-6"></div>
                              <div class="col-6" style="text-align: right;">
                                  <button type="button" class="btn btn-outline-primary btn-sm" onclick="backbutton()">Atrás</button>
                              </div>
+                         </div> -->
+                         <div class="row">
+                                    <div class="col-12" style="text-align: center;">
+                                        <img src="../assets/img/pages/logo.jpg" alt="lashes" style="width: 200px; height: auto;">
+                                    </div>
+                            </div>
+                         <div class="row mt-4">
+                             <div class="col">
+                                 <label style="font-weight: bold">Seleccione la fecha:</label>
+                             </div>
+                             <div class="col">
+                                 <input id="inputFecha" type="date" class="form-control" onchange="selectFecha(event)" style="border:#B7EC00 2px solid;">
+                             </div>
                          </div>
                          <div class="row mt-4">
                              <div class="col">
-                                 <label style="font-weight: bold">Seleccione la fecha de su reserva:</label>
-                             </div>
-                             <div class="col">
-                                 <input id="inputFecha" type="date" class="form-control" onchange="selectFecha(event)">
-                             </div>
-                         </div>
-                         <div class="row mt-4">
-                             <div class="col">
-                                 <label style="font-weight: bold">Seleccione el estilista</label>
+                                 <label style="font-weight: bold">Seleccione el especialista</label>
                              </div>
                          </div>
                          <div id="div-users" class="row mt-4">
@@ -311,7 +414,7 @@ function selectFecha(event){
                                     <div class="container">
                                         <div class="row">
                                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-4 mt-3">
-                                                <img src="../assets/img/avatars/${usuarios[i].avatar}" class="rounded-circle" style="width: 80px;" alt="Avatar" />
+                                                <img src="../assets/img/avatars/${usuarios[i].avatar}" class="rounded-circle" style="width: 80px; border:#B7EC00 2px solid;" alt="Avatar" />
                                             </div>
                                             <div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-8 mt-3">
                                                 <label style="cursor: pointer;"><strong>${usuarios[i].nombre}</strong></label>
