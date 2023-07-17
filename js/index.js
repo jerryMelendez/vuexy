@@ -691,18 +691,49 @@ function agendarCita(){
 
 // Funcion para deshabilitar las horas que ya estan ocupadas
 function comprobarHoras(horasOcupadas){
-    for (let i = 0; i < horasOcupadas.length; i++) {        
-        for (let j = 0; j < horas.length; j++) {
-            if(horas[j].includes(horasOcupadas[i])){
-                console.log(horas[j]);
-                $(`#${horas[j]}`).removeClass('div-horas');
-                $(`#${horas[j]}`).addClass('div-disabled');
-                $(`#label${horas[j]}`).text(function(index, text) {
-                    return text + " (Ocupado)";
-                });
+    const prom = new Promise((resolve) => {
+        for (let i = 0; i < horasOcupadas.length; i++) {
+            const HM = horasOcupadas[i].split(':');
+            let h = '';
+            let m = '';
+            
+            if (HM[0].length === 1)
+            {
+                h = '0' + HM[0];
+            }
+            else
+            {
+                h = HM[0];
+            }
+
+            if (HM[1].length === 1)
+            {
+                m = '0' + HM[1];
+            }
+            else
+            {
+                m = HM[1];
+            }
+
+            horasOcupadas[i] = h + ':' + m;
+        }
+        resolve(horasOcupadas);
+    });
+
+    prom.then(() => {
+        for (let i = 0; i < horasOcupadas.length; i++) {        
+            for (let j = 0; j < horas.length; j++) {
+                if(horas[j].includes(horasOcupadas[i])){
+                    console.log(horas[j]);
+                    $(`#${horas[j]}`).removeClass('div-horas');
+                    $(`#${horas[j]}`).addClass('div-disabled');
+                    $(`#label${horas[j]}`).text(function(index, text) {
+                        return text + " (Ocupado)";
+                    });
+                }
             }
         }
-    }
+    });
 
     // if(horasOcupadas.includes('8:0')){
     //     $('#08').removeClass('div-horas');
