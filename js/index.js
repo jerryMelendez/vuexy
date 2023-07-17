@@ -13,6 +13,7 @@ let nombreEstilista; // nombre del estilista seleccionado para mostrarlo en la i
 let arrayFecha; // arreglo que contiene la fecha de la cita
 let departamentos = [];
 let municipios = [];
+let horas = [];
 
 
 $('#sucursales').hide();
@@ -21,35 +22,77 @@ $('#formulario').hide();
 $('#info').hide();
 // Funcion que se ejecuta al presionar el boton de regresar
 function backbutton(){
-    switch(steps){
-        case 1:
-            break;
-        case 2:
-            $('#categorias').hide();
-            $('#sucursales').show();
-            steps--;
-            break;
-        case 3:
-            $('#servicios').hide();
-            $('#categorias').show();
-            steps--;
-            break;
-        case 4:
-            $('#usuarios').hide();
-            $('#servicios').show();
-            steps--;
-            break;
-        case 5:
-            $('#horas').hide();
-            $('#usuarios').show();
-            steps--;
-            restaurarHoras();
-            break;
-        case 6:
-            $('#formulario').hide();
-            $('#horas').show();
-            steps--;
-            break;
+    if (nombreCategoria && (nombreCategoria.includes('Pestañas') || nombreCategoria.includes('Cejas') || nombreCategoria.includes('Párpados') || nombreCategoria.includes('Labios')))
+    {
+        switch(steps){
+            case 1:
+                break;
+            case 2:
+                $('#categorias').hide();
+                $('#sucursales').show();
+                steps--;
+                break;
+            case 3:
+                $('#tiposervicio').hide();
+                $('#categorias').show();
+                steps--;
+                break;
+            case 4:
+                $('#servicios').hide();
+                $('#tiposervicio').show();
+                steps--;
+                break;
+                break;
+            case 5:
+                $('#usuarios').hide();
+                $('#servicios').show();
+                steps--;
+                break;
+            case 6:
+                $('#horas').hide();
+                $('#usuarios').show();
+                steps--;
+                // restaurarHoras();
+                break;
+            case 7:
+                $('#formulario').hide();
+                $('#horas').show();
+                steps--;
+                break;
+        }
+    }
+    else
+    {
+        switch(steps){
+            case 1:
+                break;
+            case 2:
+                $('#categorias').hide();
+                $('#sucursales').show();
+                steps--;
+                break;
+            case 3:
+                $('#servicios').hide();
+                $('#categorias').show();
+                steps--;
+                break;
+            case 4:
+                $('#usuarios').hide();
+                $('#servicios').show();
+                steps--;
+                break;
+            case 5:
+                $('#horas').hide();
+                $('#usuarios').show();
+                steps--;
+                // restaurarHoras();
+                break;
+            case 6:
+                $('#formulario').hide();
+                $('#horas').show();
+                steps--;
+                break;
+        }
     }
 }
 
@@ -70,13 +113,13 @@ $( document ).ready(function() {
             function: 'index'
         },
         success: function(result) {
-            // console.log(JSON.parse(result));
             JSON.parse(result).forEach(sucursal => {
                 cols += `
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mt-4" onclick="getCategorias(${sucursal.idsucursal}, '${sucursal.nombre}')">
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mt-4" onclick="getCategorias(${sucursal.idsucursal}, '${sucursal.nombre}', '${sucursal.apertura}', '${sucursal.cierre}')">
                             <div class="card div-sucursales">
                                 <div class="card-body">
-                                    ${sucursal.nombre}
+                                    <h5>${sucursal.nombre}</h5>
+                                    <label><i class="bi bi-geo-alt-fill"></i> ${sucursal.direccion}</label>
                                 </div>
                             </div>
                         </div>`;
@@ -91,7 +134,7 @@ $( document ).ready(function() {
                             </div>
                                 <div class="row mt-4">
                                     <div class="col-12" style="text-align: center;">
-                                        <h5>Elija una sucursal</h5>
+                                        <h5 style="color: #727f00">Elija una sucursal</h5>
                                     </div>
                                 </div>
                                 <div class="row mt-4">
@@ -102,17 +145,36 @@ $( document ).ready(function() {
         },
         error: function(error){
             alert('Hubo un error en la peticion');
-            console.log(error);
         }
     });
 });
 
 // Funcion que se ejecuta al seleccionar una sucursal
-function getCategorias(idsucursall, nombreSuc) {
+function getCategorias(idsucursall, nombreSuc, apertura, cierre) {
+    horas=[];
+    today = new Date();
     idsucursal = idsucursall;
     nombreSucursal = nombreSuc;
     steps++;
     let cols = ``;
+
+    const startDate = new Date(today.getFullYear() + '-' + today.getMonth() + '-' + today.getDate() + ' ' + apertura);
+    const endDate = new Date(today.getFullYear() + '-' + today.getMonth() + '-' + today.getDate() + ' ' + cierre);
+    const diff = Math.abs(endDate - startDate);
+    const diffHours = Math.floor(diff / (1000 * 60 * 60));
+    const diffMinutes = Math.floor((diff / (1000 * 60)) % 60);
+    for (let i = startDate.getHours(); i <= endDate.getHours() - 1; i++) {
+        if (i !== 12){
+            for (let j = 0; j < 60; j += 30) {
+                if (j === 0) {
+                    horas.push(`${i}:00`);
+                } else {
+                    horas.push(`${i}:${j}`);
+                }
+            }
+        }
+    }
+
     $.ajax({
         url: '../controllers/catproductosController.php',
         type: 'GET',
@@ -150,13 +212,13 @@ function getCategorias(idsucursall, nombreSuc) {
                 prom.then(() => {
                     let html = `
                         <div class="container">
-                                <!-- <div class="row">
+                                <div class="row">
                                     <div class="col">
-                                        <div class="col" style="text-align: right;">
-                                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="backbutton()">Atrás</button>
+                                        <div class="col" style="text-align: left;">
+                                            <button type="button" class="btn-atras" onclick="backbutton()"><strong><label style="cursor: pointer;">Regresar</label></strong></button>
                                         </div>
                                     </div>
-                                </div> -->
+                                </div>
                                 <div class="row">
                                     <div class="col-12" style="text-align: center;">
                                         <img src="../assets/img/pages/logo.jpg" alt="lashes" style="width: 200px; height: auto;">
@@ -164,7 +226,7 @@ function getCategorias(idsucursall, nombreSuc) {
                                 </div>
                                 <div class="row">
                                     <div class="col" style="text-align: center;">
-                                        <h5>Selecciona el tipo de trabajo</h5>
+                                        <h5 style="color: #727f00">Selecciona el tipo de trabajo</h5>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -183,7 +245,6 @@ function getCategorias(idsucursall, nombreSuc) {
         },
         error: function(error){
             alert('Hubo un error en la peticion');
-            console.log(error);
         }
 
     });
@@ -194,12 +255,12 @@ function getTipoServicio(idcategoria, nombreCat){
     if (nombreCat.includes('Pestañas') || nombreCat.includes('Cejas') || nombreCat.includes('Párpados') || nombreCat.includes('Labios'))
     {
         let cols = ``;
+        steps++;
         $.ajax({
             url: '../controllers/tiposervicioController.php',
             type: 'GET',
             data: {function: 'index'},
             success: function(result){
-                console.log(JSON.parse(result));
                 let tipoServicios = [];
 
                 if (result !== 0){
@@ -224,11 +285,13 @@ function getTipoServicio(idcategoria, nombreCat){
                     prom.then(() => {
                         let html = `
                             <div class="container">
-                                    <!-- <div class="row">
-                                        <div class="col" style="text-align: right;">
-                                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="backbutton()">Atrás</button>
+                                <div class="row">
+                                    <div class="col">
+                                            <div class="col" style="text-align: left;">
+                                                <button type="button" class="btn-atras" onclick="backbutton()"><strong><label style="cursor: pointer;">Regresar</label></strong></button>
+                                            </div>
                                         </div>
-                                    </div> -->
+                                    </div>
                                     <div class="row">
                                         <div class="col-12" style="text-align: center;">
                                             <img src="../assets/img/pages/logo.jpg" alt="lashes" style="width: 200px; height: auto;">
@@ -236,7 +299,7 @@ function getTipoServicio(idcategoria, nombreCat){
                                     </div>
                                     <div class="row">
                                         <div class="col-6">
-                                            <h5>Elija el tipo de trabajo</h5>
+                                            <h5 style="color: #727f00">Seleccione un modo</h5>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -255,7 +318,6 @@ function getTipoServicio(idcategoria, nombreCat){
             },
             error: function(error){
                 alert('Hubo un error en la peticion');
-                console.log(error);
             }
         })
     }
@@ -279,7 +341,6 @@ function getServiciosByCategoria(idcategoria, nombreCat){
 
             if (result !== 0){
                 servicios = JSON.parse(result);
-                console.log(servicios);
                 const prom = new Promise((resolve) => {
                     for (let i = 0; i < servicios.length; i++) {
                         cols += `
@@ -318,8 +379,20 @@ function getServiciosByCategoria(idcategoria, nombreCat){
                                     </div>
                                 </div>
                                 <div class="row">
+                                    <div class="col">
+                                            <div class="col" style="text-align: left;">
+                                                <button type="button" class="btn-atras" onclick="backbutton()"><strong><label style="cursor: pointer;">Regresar</label></strong></button>
+                                            </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12" style="text-align: center;">
+                                        <img src="../assets/img/pages/logo.jpg" alt="lashes" style="width: 200px; height: auto;">
+                                    </div>
+                                </div>
+                                <div class="row">
                                     <div class="col-6">
-                                        <h5>Selecciona el servicio</h5>
+                                        <h5 style="color: #727f00">Selecciona el servicio</h5>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -339,24 +412,34 @@ function getServiciosByCategoria(idcategoria, nombreCat){
         },
         error: function(error){
             alert('Hubo un error en la peticion');
-            console.log(error);
         }
     });
 }
 
 // cargar los estilistas
 function getUsuarios(idserv, nombreserv){
-    console.log(idserv, nombreserv);
     steps++;
     idservicio = idserv;
     nombreServicio = nombreserv;
 
     let html = `
                      <div class="container">
-                         <!-- <div class="row">
-                             <div class="col-6"></div>
-                             <div class="col-6" style="text-align: right;">
-                                 <button type="button" class="btn btn-outline-primary btn-sm" onclick="backbutton()">Atrás</button>
+                        <div class="row">
+                            <div class="col" style="text-align: left;">
+                                <button type="button" class="btn-atras" onclick="backbutton()"><strong><label style="cursor: pointer;">Regresar</label></strong></button>
+                            </div>
+                        </div>
+                         <div class="row">
+                                    <div class="col-12" style="text-align: center;">
+                                        <img src="../assets/img/pages/logo.jpg" alt="lashes" style="width: 200px; height: auto;">
+                                    </div>
+                            </div>
+                         <div class="row mt-4">
+                             <div class="col">
+                                 <label style="font-weight: bold; color: #727f00">Seleccione la fecha:</label>
+                             </div>
+                             <div class="col">
+                                 <input id="inputFecha" type="date" class="form-control" onchange="selectFecha(event)" style="border:#B7EC00 2px solid; color: #727f00">
                              </div>
                          </div> -->
                          <div class="row">
@@ -366,15 +449,7 @@ function getUsuarios(idserv, nombreserv){
                             </div>
                          <div class="row mt-4">
                              <div class="col">
-                                 <label style="font-weight: bold">Seleccione la fecha:</label>
-                             </div>
-                             <div class="col">
-                                 <input id="inputFecha" type="date" class="form-control" onchange="selectFecha(event)" style="border:#B7EC00 2px solid;">
-                             </div>
-                         </div>
-                         <div class="row mt-4">
-                             <div class="col">
-                                 <label style="font-weight: bold">Seleccione el especialista</label>
+                                 <label style="font-weight: bold; color: #727f00">Seleccione el especialista</label>
                              </div>
                          </div>
                          <div id="div-users" class="row mt-4">
@@ -392,7 +467,6 @@ function selectFecha(event){
     fechaCita = event.target.value;
     fecha = new Date(fechaCita);
     const dias = ['LU','MA','MI','JU','VI','SA','DO'];
-    console.log(idservicio, idsucursal, dias[fecha.getDay()]);
 
     let cols = ``;
     $.ajax({
@@ -401,10 +475,8 @@ function selectFecha(event){
         data: {function: 'getUsuariosDisponibles', idsucursal, idservicio, dia: dias[fecha.getDay()]},
         success: function(result){
             let usuarios;
-            console.log(result);
             if (result !== 0){
                 usuarios = JSON.parse(result);
-                console.log(usuarios)
                 const prom = new Promise((resolve) => {
                     for (let i = 0; i < usuarios.length; i++) {
                         cols += `
@@ -441,11 +513,9 @@ function selectFecha(event){
         },
         error: function(error) {
             alert('Hubo un error en la peticion');
-            console.log(error);
         }
     });
 }
-
 
 function selecEstilista(idusuarioSeleccionado, nombreEst){
     idusuario = idusuarioSeleccionado;
@@ -459,21 +529,20 @@ function selecEstilista(idusuarioSeleccionado, nombreEst){
             type: 'POST',
             data: {function: 'getHorasOcupadas', fecha: arrayFecha, idempleado: idusuario},
             success: function(result){
-                let horas = JSON.parse(result);
+                let horasOcupadas = JSON.parse(result);
                 
-                comprobarHoras(horas);
+                comprobarHoras(horasOcupadas);
             },
             error: function(error){
                 alert('Hubo un error en la peticion');
-                console.log(error);
             }
         });
 
         $('#usuarios').hide();
         $('#horas').show();
+        llenarDivHoras();
     }
     else{
-        console.log('fecha no seleccionada');
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -490,7 +559,6 @@ function SelectHora(hora){
         type: 'GET',
         data: {function: 'index'},
         success: function(result){
-            console.log(result);
             arrayDepartamentos = JSON.parse(result);
             for (let i = 0; i < arrayDepartamentos.length; i++) {
                 $('#Departamento').append($('<option>', { 
@@ -502,7 +570,6 @@ function SelectHora(hora){
             
         },
         error: function(error){
-            console.log(error);
         }
     });
     $('#horas').hide();
@@ -510,7 +577,6 @@ function SelectHora(hora){
 }
 
 function selectDepartamento(event){
-    console.log(event.target.value);
     $('#Municipio').empty();
     $.ajax({
         url: '../controllers/municipioController.php',
@@ -528,16 +594,13 @@ function selectDepartamento(event){
             
         },
         error: function(error){
-            console.log(error);
         }
     });
 
 }
 
 function agendarCita(){
-    console.log(fechaCita + ' ' + horacita);
     const fecha = new Date(fechaCita + ' ' + horacita);
-    console.log(fecha);
 
     // Faltan los campos idcliente y tipo, estos se establecen al comprobar 
     // que si el cliente esta registrado o no
@@ -581,7 +644,6 @@ function agendarCita(){
                                 title: 'Cita agendada',
                                 text: 'Su cita ha sido agendada correctamente',
                               });
-                            console.log('horaCita: ' + horacita);
                             $('#parrafoDetalleCita').text('Muchas gracias ' + $('#nombreCliente').val() + ' por realizar una reservación de nuestros servicios a continuación se muestran los detalles de la cita, puede revisar su correo electrónico donde le hemos enviado estos datos');
                             $('#infoSucursal').text(nombreSucursal);
                             $('#infoCategoria').text(nombreCategoria);
@@ -607,22 +669,18 @@ function agendarCita(){
                                     cliente: $('#nombreCliente').val()
                                 },
                                 success: function(result){
-                                    // console.log(result);
                                 },
                                 error: function(error){
-                                    // console.log(error);
                                 }
                             })
                         }
                     },
                     error: function(error) {
                         alert('Hubo un error en la peticion');
-                        console.log(error);
                     }
                 });
             }
             else if (result.isDenied) {
-                console.log('cancelar');
             }
 
         }
@@ -632,202 +690,274 @@ function agendarCita(){
 
 
 // Funcion para deshabilitar las horas que ya estan ocupadas
-function comprobarHoras(horas){
-    if(horas.includes('8:0')){
-        $('#08').removeClass('div-horas');
-        $('#08').addClass('div-disabled');
-        $("#label08").text(function(index, text) {
-            return text + " (Ocupado)";
-        });
+function comprobarHoras(horasOcupadas){
+    for (let i = 0; i < horasOcupadas.length; i++) {        
+        for (let j = 0; j < horas.length; j++) {
+            if(horas[j].includes(horasOcupadas[i])){
+                console.log(horas[j]);
+                $(`#${horas[j]}`).removeClass('div-horas');
+                $(`#${horas[j]}`).addClass('div-disabled');
+                $(`#label${horas[j]}`).text(function(index, text) {
+                    return text + " (Ocupado)";
+                });
+            }
+        }
     }
-    if(horas.includes('8:30')){
-        $('#0830').removeClass('div-horas');
-        $('#0830').addClass('div-disabled');
-        $("#label0830").text(function(index, text) {
-            return text + " (Ocupado)";
-        });
-    }
-    if(horas.includes('9:0')){
-        $('#09').removeClass('div-horas');
-        $('#09').addClass('div-disabled');
-        $("#label09").text(function(index, text) {
-            return text + " (Ocupado)";
-        });
-    }
-    if(horas.includes('9:30')){
-        $('#0930').removeClass('div-horas');
-        $('#0930').addClass('div-disabled');
-        $("#label0930").text(function(index, text) {
-            return text + " (Ocupado)";
-        });
-    }
-    if(horas.includes('10:0')){
-        $('#10').removeClass('div-horas');
-        $('#10').addClass('div-disabled');
-        $("#label10").text(function(index, text) {
-            return text + " (Ocupado)";
-        });
-    }
-    if(horas.includes('10:30')){
-        $('#1030').removeClass('div-horas');
-        $('#1030').addClass('div-disabled');
-        $("#label1030").text(function(index, text) {
-            return text + " (Ocupado)";
-        });
-    }
-    if(horas.includes('11:0')){
-        $('#11').removeClass('div-horas');
-        $('#11').addClass('div-disabled');
-        $("#label11").text(function(index, text) {
-            return text + " (Ocupado)";
-        });
-    }
-    if(horas.includes('11:30')){
-        $('#1130').removeClass('div-horas');
-        $('#1130').addClass('div-disabled');
-        $("#label1130").text(function(index, text) {
-            return text + " (Ocupado)";
-        });
-    }
-    if(horas.includes('13:0')){
-        $('#13').removeClass('div-horas');
-        $('#13').addClass('div-disabled');
-        $("#label13").text(function(index, text) {
-            return text + " (Ocupado)";
-        });
-    }
-    if(horas.includes('13:30')){
-        $('#1330').removeClass('div-horas');
-        $('#1330').addClass('div-disabled');
-        $("#label1330").text(function(index, text) {
-            return text + " (Ocupado)";
-        });
-    }
-    if(horas.includes('14:0')){
-        $('#14').removeClass('div-horas');
-        $('#14').addClass('div-disabled');
-        $("#label14").text(function(index, text) {
-            return text + " (Ocupado)";
-        });
-    }
-    if(horas.includes('14:30')){
-        $('#1430').removeClass('div-horas');
-        $('#1430').addClass('div-disabled');
-        $("#label1430").text(function(index, text) {
-            return text + " (Ocupado)";
-        });
-    }
-    if(horas.includes('15:0')){
-        $('#15').removeClass('div-horas');
-        $('#15').addClass('div-disabled');
-        $("#label15").text(function(index, text) {
-            return text + " (Ocupado)";
-        });
-    }
-    if(horas.includes('15:30')){
-        $('#1530').removeClass('div-horas');
-        $('#1530').addClass('div-disabled');
-        $("#label1530").text(function(index, text) {
-            return text + " (Ocupado)";
-        });
-    }
-    if(horas.includes('16:0')){
-        $('#16').removeClass('div-horas');
-        $('#16').addClass('div-disabled');
-        $("#label16").text(function(index, text) {
-            return text + " (Ocupado)";
-        });
-    }
-    if(horas.includes('16:30')){
-        $('#1630').removeClass('div-horas');
-        $('#1630').addClass('div-disabled');
-        $("#label1630").text(function(index, text) {
-            return text + " (Ocupado)";
-        });
-    }
+
+    // if(horasOcupadas.includes('8:0')){
+    //     $('#08').removeClass('div-horas');
+    //     $('#08').addClass('div-disabled');
+    //     $("#label08").text(function(index, text) {
+    //         return text + " (Ocupado)";
+    //     });
+    // }
+    // if(horasOcupadas.includes('8:30')){
+    //     $('#0830').removeClass('div-horas');
+    //     $('#0830').addClass('div-disabled');
+    //     $("#label0830").text(function(index, text) {
+    //         return text + " (Ocupado)";
+    //     });
+    // }
+    // if(horasOcupadas.includes('9:0')){
+    //     $('#09').removeClass('div-horas');
+    //     $('#09').addClass('div-disabled');
+    //     $("#label09").text(function(index, text) {
+    //         return text + " (Ocupado)";
+    //     });
+    // }
+    // if(horas.includes('9:30')){
+    //     $('#0930').removeClass('div-horas');
+    //     $('#0930').addClass('div-disabled');
+    //     $("#label0930").text(function(index, text) {
+    //         return text + " (Ocupado)";
+    //     });
+    // }
+    // if(horas.includes('10:0')){
+    //     $('#10').removeClass('div-horas');
+    //     $('#10').addClass('div-disabled');
+    //     $("#label10").text(function(index, text) {
+    //         return text + " (Ocupado)";
+    //     });
+    // }
+    // if(horas.includes('10:30')){
+    //     $('#1030').removeClass('div-horas');
+    //     $('#1030').addClass('div-disabled');
+    //     $("#label1030").text(function(index, text) {
+    //         return text + " (Ocupado)";
+    //     });
+    // }
+    // if(horas.includes('11:0')){
+    //     $('#11').removeClass('div-horas');
+    //     $('#11').addClass('div-disabled');
+    //     $("#label11").text(function(index, text) {
+    //         return text + " (Ocupado)";
+    //     });
+    // }
+    // if(horas.includes('11:30')){
+    //     $('#1130').removeClass('div-horas');
+    //     $('#1130').addClass('div-disabled');
+    //     $("#label1130").text(function(index, text) {
+    //         return text + " (Ocupado)";
+    //     });
+    // }
+    // if(horas.includes('13:0')){
+    //     $('#13').removeClass('div-horas');
+    //     $('#13').addClass('div-disabled');
+    //     $("#label13").text(function(index, text) {
+    //         return text + " (Ocupado)";
+    //     });
+    // }
+    // if(horas.includes('13:30')){
+    //     $('#1330').removeClass('div-horas');
+    //     $('#1330').addClass('div-disabled');
+    //     $("#label1330").text(function(index, text) {
+    //         return text + " (Ocupado)";
+    //     });
+    // }
+    // if(horas.includes('14:0')){
+    //     $('#14').removeClass('div-horas');
+    //     $('#14').addClass('div-disabled');
+    //     $("#label14").text(function(index, text) {
+    //         return text + " (Ocupado)";
+    //     });
+    // }
+    // if(horas.includes('14:30')){
+    //     $('#1430').removeClass('div-horas');
+    //     $('#1430').addClass('div-disabled');
+    //     $("#label1430").text(function(index, text) {
+    //         return text + " (Ocupado)";
+    //     });
+    // }
+    // if(horas.includes('15:0')){
+    //     $('#15').removeClass('div-horas');
+    //     $('#15').addClass('div-disabled');
+    //     $("#label15").text(function(index, text) {
+    //         return text + " (Ocupado)";
+    //     });
+    // }
+    // if(horas.includes('15:30')){
+    //     $('#1530').removeClass('div-horas');
+    //     $('#1530').addClass('div-disabled');
+    //     $("#label1530").text(function(index, text) {
+    //         return text + " (Ocupado)";
+    //     });
+    // }
+    // if(horas.includes('16:0')){
+    //     $('#16').removeClass('div-horas');
+    //     $('#16').addClass('div-disabled');
+    //     $("#label16").text(function(index, text) {
+    //         return text + " (Ocupado)";
+    //     });
+    // }
+    // if(horas.includes('16:30')){
+    //     $('#1630').removeClass('div-horas');
+    //     $('#1630').addClass('div-disabled');
+    //     $("#label1630").text(function(index, text) {
+    //         return text + " (Ocupado)";
+    //     });
+    // }
 }
 
 // Funcion para restaurar las horas por si el usuario retrocede
 function restaurarHoras(){
-        $('#08').removeClass();
-        $('#08').addClass('div-horas');
-        $('#08').addClass('card');
-        $("#label08").text('8 am');
+    $('#08').removeClass();
+    $('#08').addClass('div-horas');
+    $('#08').addClass('card');
+    $("#label08").text('8 am');
 
-        $('#0830').removeClass();
-        $('#0830').addClass('div-horas');
-        $('#0830').addClass('card');
-        $("#label0830").text('8:30 am');
+    $('#0830').removeClass();
+    $('#0830').addClass('div-horas');
+    $('#0830').addClass('card');
+    $("#label0830").text('8:30 am');
 
-        $('#09').removeClass();
-        $('#09').addClass('div-horas');
-        $('#09').addClass('card');
-        $("#label09").text('9 am');
+    $('#09').removeClass();
+    $('#09').addClass('div-horas');
+    $('#09').addClass('card');
+    $("#label09").text('9 am');
 
-        $('#0930').removeClass();
-        $('#0930').addClass('div-horas');
-        $('#0930').addClass('card');
-        $("#label0930").text('8:30 am');
+    $('#0930').removeClass();
+    $('#0930').addClass('div-horas');
+    $('#0930').addClass('card');
+    $("#label0930").text('8:30 am');
 
-        $('#10').removeClass();
-        $('#10').addClass('div-horas');
-        $('#10').addClass('card');
-        $("#label10").text('10 am');
+    $('#10').removeClass();
+    $('#10').addClass('div-horas');
+    $('#10').addClass('card');
+    $("#label10").text('10 am');
 
-        $('#1030').removeClass();
-        $('#1030').addClass('div-horas');
-        $('#1030').addClass('card');
-        $("#label1030").text('10:30 am');
+    $('#1030').removeClass();
+    $('#1030').addClass('div-horas');
+    $('#1030').addClass('card');
+    $("#label1030").text('10:30 am');
 
-        $('#11').removeClass();
-        $('#11').addClass('div-horas');
-        $('#11').addClass('card');
-        $("#label11").text('11 am');
+    $('#11').removeClass();
+    $('#11').addClass('div-horas');
+    $('#11').addClass('card');
+    $("#label11").text('11 am');
 
-        $('#1130').removeClass();
-        $('#1130').addClass('div-horas');
-        $('#1130').addClass('card');
-        $("#label1130").text('11:30 am');
+    $('#1130').removeClass();
+    $('#1130').addClass('div-horas');
+    $('#1130').addClass('card');
+    $("#label1130").text('11:30 am');
 
-        $('#13').removeClass();
-        $('#13').addClass('div-horas');
-        $('#13').addClass('card');
-        $("#label13").text('1 pm');
+    $('#13').removeClass();
+    $('#13').addClass('div-horas');
+    $('#13').addClass('card');
+    $("#label13").text('1 pm');
 
-        $('#1330').removeClass();
-        $('#1330').addClass('div-horas');
-        $('#1330').addClass('card');
-        $("#label1330").text('1:30 pm');
+    $('#1330').removeClass();
+    $('#1330').addClass('div-horas');
+    $('#1330').addClass('card');
+    $("#label1330").text('1:30 pm');
 
-        $('#14').removeClass();
-        $('#14').addClass('div-horas');
-        $('#14').addClass('card');
-        $("#label14").text('2 pm');
+    $('#14').removeClass();
+    $('#14').addClass('div-horas');
+    $('#14').addClass('card');
+    $("#label14").text('2 pm');
 
-        $('#1430').removeClass();
-        $('#1430').addClass('div-horas');
-        $('#1430').addClass('card');
-        $("#label1430").text('2:30 pm');
+    $('#1430').removeClass();
+    $('#1430').addClass('div-horas');
+    $('#1430').addClass('card');
+    $("#label1430").text('2:30 pm');
 
-        $('#15').removeClass();
-        $('#15').addClass('div-horas');
-        $('#15').addClass('card');
-        $("#label15").text('3 pm');
+    $('#15').removeClass();
+    $('#15').addClass('div-horas');
+    $('#15').addClass('card');
+    $("#label15").text('3 pm');
 
-        $('#1530').removeClass();
-        $('#1530').addClass('div-horas');
-        $('#1530').addClass('card');
-        $("#label1530").text('3:30 pm');
+    $('#1530').removeClass();
+    $('#1530').addClass('div-horas');
+    $('#1530').addClass('card');
+    $("#label1530").text('3:30 pm');
 
-        $('#16').removeClass();
-        $('#16').addClass('div-horas');
-        $('#16').addClass('card');
-        $("#label16").text('4 pm');
+    $('#16').removeClass();
+    $('#16').addClass('div-horas');
+    $('#16').addClass('card');
+    $("#label16").text('4 pm');
 
-        $('#1630').removeClass();
-        $('#1630').addClass('div-horas');
-        $('#1630').addClass('card');
-        $("#label1630").text('4:30 pm');
-
-    
+    $('#1630').removeClass();
+    $('#1630').addClass('div-horas');
+    $('#1630').addClass('card');
+    $("#label1630").text('4:30 pm');
 }
+
+// Funcion para llenar las horas con el array que se lleno
+function llenarDivHoras(){
+    let html = `<div class="container">
+                    <div class="row mt-5">
+                        <div class="col">
+                                <div class="col" style="text-align: left;">
+                                    <button type="button" class="btn-atras" onclick="backbutton()"><strong><label style="cursor: pointer;">Regresar</label></strong></button>
+                                </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col" style="text-align: center;">
+                            <h5 style="color: #727f00">Seleccione la hora de su cita</h5>
+                        </div>
+                    </div>`;
+
+    const prom = new Promise((resolve) => {
+        for (let i = 0; i < Math.ceil((horas.length)/6); i++) {
+            html += `<div class="row">`;
+            for (let j = 0; j < 6; j++) {
+                if (horas[(i*6)+j])
+                {
+                    html += `
+                    <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-6 mt-4">
+                        <div id="${horas[(i*6)+j]}" class="card div-horas" onclick="SelectHora('${horas[(i*6)+j]}')">
+                            <label id="label${horas[(i*6)+j]}" class="centrarHora">${convertirHoraAMPM(horas[(i*6)+j])}</label>
+                        </div>
+                    </div>
+                    `;
+                }
+            }
+            html += `</div>`;
+        }
+        resolve(html);
+    });
+
+    prom.then(()=>{
+        html += `</div>`;
+
+        $('#horas').html(html);
+    });
+}
+
+function convertirHoraAMPM(hora24) {
+    const HM = hora24.split(':');
+    let hora12 = HM[0];
+    let minutos = HM[1];
+    let sufijo = "AM";
+  
+    if (Number(HM[0]) >= 12) {
+      hora12 = Number(HM[0]) - 12;
+      sufijo = "PM";
+    }
+  
+    if (hora12 === 0) {
+      hora12 = 12;
+    }
+  
+    return `${hora12}:${minutos} ${sufijo}`;
+  }

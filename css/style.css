@@ -25,6 +25,7 @@
 	cursor: pointer;
 	transition: transform 0.3s ease; /* Agrega una transición suave al efecto */
 	border:#B7EC00 2px solid;
+	color: #727f00
 }
   
 .div-sucursales:hover {
@@ -41,6 +42,7 @@
 	cursor: pointer;
 	transition: transform 0.3s ease; /* Agrega una transición suave al efecto */
 	border:#B7EC00 2px solid;
+	color: #727f00
 }
   
 .div-usuarios:hover {
@@ -55,6 +57,7 @@
 	cursor: pointer;
 	transition: transform 0.3s ease; /* Agrega una transición suave al efecto */
 	border:#B7EC00 2px solid;
+	color: #727f00
 }
   
 .div-categorias:hover {
@@ -69,6 +72,7 @@
 	cursor: pointer;
 	transition: transform 0.3s ease; /* Agrega una transición suave al efecto */
 	border:#B7EC00 2px solid;
+	color: #727f00
 }
   
 .div-servicios:hover {
@@ -83,7 +87,8 @@
 	height: 50px;
 	cursor: pointer;
 	transition: transform 0.3s ease; /* Agrega una transición suave al efecto */
-	border:#B7EC00 2px solid;	
+	border:#B7EC00 2px solid;
+	color: #727f00
 }
   
 .div-horas:hover {
@@ -109,7 +114,7 @@
 	color: gray; background-color: rgb(243, 243, 243);
 }
 
-.row-bigger{
+  .row-bigger{
 	min-height: 50px;
   }
   
@@ -129,6 +134,23 @@
 	background: rgb(228,228,228);
 	background: linear-gradient(180deg, rgba(228,228,228,1) 4%, rgba(255,255,255,1) 4%, rgba(255,255,255,1) 14%, rgba(228,228,228,1) 14%, rgba(228,228,228,1) 86%, rgba(255,255,255,1) 86%, rgba(255,255,255,1) 95%, rgba(228,228,228,1) 95%);
   }
+
+  .btn-atras {
+	cursor: pointer;
+	transition: transform 0.3s ease; /* Agrega una transición suave al efecto */
+	border:#B7EC00 2px solid;
+	border-radius: 10px;
+	background-color: white;
+	color: #727f00;
+	padding-left: 30px;
+	padding-right: 30px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+  
+.btn-atras:hover {
+	transform: scale(1.035); /* Escala el div al 103.5% de su tamaño original */
+}
 /* h1, h2, h3, h4, h5, h6 {
 	font-family: 'Public Sans';
 }
