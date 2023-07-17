@@ -60,17 +60,28 @@ require('connection.php');
                     $mysqli->execute();
 
                     $result = $mysqli->get_result();
+
+                    $idCita = $mysqli->insert_id;
                 
                     // var_dump($result);
+                    // Guardar en la tabla citas_servicios
+                    $query = "INSERT into citas_servicios(idcita, idservicio) VALUES(?, ?)";
+                    $mysqliCitaServ = mysqli_prepare($db->connect(), $query);
+                    $mysqliCitaServ->bind_param("ii", $idCita, $cita['id_servicio']);
+                    $mysqliCitaServ->execute();
+
+                    $resultCitaServ = $mysqliCitaServ->get_result();
+
+                
                     $mysqli->close();
                     echo("Cita creada correctamente");
             }
             else {
                 // guardar el cliente en la base de datos
-                $mysqli = mysqli_prepare($db->connect(), "INSERT INTO `dbsgs`.`clientes` (`nombre`, `cel_claro`, `cel_tigo`, `cel_whatsapp`, `cedula`, `fecha_nacimiento`, `edad`, `email`, `fecha_alta`, `iddepartamento`, `idmunicipio`, `barrio`, `foto`, `estado`) 
-                VALUES (?, ' ', ' ', ?, '', '1900-01-01', '23', ?, '".date('Y-m-d')."', ?, ?, ' ', ' ', '1');");
+                $mysqli = mysqli_prepare($db->connect(), "INSERT INTO `dbsgs`.`clientes` (`nombre`, `cel_claro`, `cel_tigo`, `cel_whatsapp`, `cedula`, `fecha_nacimiento`, `edad`, `email`, `fecha_alta`, `iddepartamento`, `idmunicipio`, `barrio`, `foto`, `estado`, `sexo`) 
+                VALUES (?, ' ', ' ', ?, '', '1900-01-01', '23', ?, '".date('Y-m-d')."', ?, ?, ' ', ' ', '1', ?);");
 
-                $mysqli->bind_param("sssss", $cita['nombre_cliente'], $cita['whatsapp'], $cita['email_cliente'], $cita['id_departamento'], $cita['id_municipio']);
+                $mysqli->bind_param("ssssss", $cita['nombre_cliente'], $cita['whatsapp'], $cita['email_cliente'], $cita['id_departamento'], $cita['id_municipio'], $cita['sexo']);
                 $mysqli->execute();
 
                 $resultInsertCliente = $mysqli->get_result();

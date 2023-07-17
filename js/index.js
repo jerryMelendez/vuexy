@@ -604,6 +604,7 @@ function agendarCita(){
         email_cliente: $('#email_cliente').val(),
         id_departamento: $('#Departamento').val(),
         id_municipio: $('#Municipio').val(),
+        sexo: $('#sexo').val(),
         id_servicio: idservicio
     }
 
