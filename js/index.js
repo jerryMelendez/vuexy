@@ -368,16 +368,6 @@ function getServiciosByCategoria(idcategoria, nombreCat){
                 prom.then(() => {
                     let html = `
                         <div class="container">
-                                <!-- <div class="row">
-                                    <div class="col" style="text-align: right;">
-                                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="backbutton()">Atrás</button>
-                                    </div>
-                                </div> -->
-                                <div class="row">
-                                    <div class="col-12" style="text-align: center;">
-                                        <img src="../assets/img/pages/logo.jpg" alt="lashes" style="width: 200px; height: auto;">
-                                    </div>
-                                </div>
                                 <div class="row">
                                     <div class="col">
                                             <div class="col" style="text-align: left;">
@@ -441,12 +431,7 @@ function getUsuarios(idserv, nombreserv){
                              <div class="col">
                                  <input id="inputFecha" type="date" class="form-control" onchange="selectFecha(event)" style="border:#B7EC00 2px solid; color: #727f00">
                              </div>
-                         </div> -->
-                         <div class="row">
-                                    <div class="col-12" style="text-align: center;">
-                                        <img src="../assets/img/pages/logo.jpg" alt="lashes" style="width: 200px; height: auto;">
-                                    </div>
-                            </div>
+                         </div>
                          <div class="row mt-4">
                              <div class="col">
                                  <label style="font-weight: bold; color: #727f00">Seleccione el especialista</label>
@@ -625,9 +610,11 @@ function agendarCita(){
     Swal.fire({
             icon: 'question',
             title: '¿Desea agendar esta cita?',
-            text: 'Se agendará una cita para el cliente '+$('#nombreCliente').val()+' el día ' + arrayFecha[2] + '/' + arrayFecha[1] + '/' + arrayFecha[0] + ' a las ' + horacita + ' con el estilista ' + nombreEstilista
+            text: 'Se agendará una cita para el cliente '+$('#nombreCliente').val()+' el día ' + arrayFecha[2] + '/' + arrayFecha[1] + '/' + arrayFecha[0] + ' a las ' + horacita + ' con el especialista ' + nombreEstilista
             + ' para el servicio de ' + nombreServicio,
             showCancelButton: true,
+            confirmButtonColor: '#B6CF02',
+            iconColor: '#B6CF02',
             confirmButtonText: `Agendar`,
             cancelButtonText: `Cancelar`,
             }).then((result) => {
@@ -643,6 +630,8 @@ function agendarCita(){
                                 icon: 'success',
                                 title: 'Cita agendada',
                                 text: 'Su cita ha sido agendada correctamente',
+                                confirmButtonColor: '#B6CF02',
+                                iconColor: '#B6CF02'
                               });
                             $('#parrafoDetalleCita').text('Muchas gracias ' + $('#nombreCliente').val() + ' por realizar una reservación de nuestros servicios a continuación se muestran los detalles de la cita, puede revisar su correo electrónico donde le hemos enviado estos datos');
                             $('#infoSucursal').text(nombreSucursal);
@@ -697,14 +686,8 @@ function comprobarHoras(horasOcupadas){
             let h = '';
             let m = '';
             
-            if (HM[0].length === 1)
-            {
-                h = '0' + HM[0];
-            }
-            else
-            {
-                h = HM[0];
-            }
+            h = HM[0];
+            
 
             if (HM[1].length === 1)
             {
@@ -723,11 +706,11 @@ function comprobarHoras(horasOcupadas){
     prom.then(() => {
         for (let i = 0; i < horasOcupadas.length; i++) {        
             for (let j = 0; j < horas.length; j++) {
-                if(horas[j].includes(horasOcupadas[i])){
-                    console.log(horas[j]);
-                    $(`#${horas[j]}`).removeClass('div-horas');
-                    $(`#${horas[j]}`).addClass('div-disabled');
-                    $(`#label${horas[j]}`).text(function(index, text) {
+                if(horas[j] === horasOcupadas[i]){
+                    const HM = horas[j].split(':');
+                    $(`#div${HM[0]+HM[1]}`).removeClass('div-horas');
+                    $(`#div${HM[0]+HM[1]}`).addClass('div-disabled');
+                    $(`#label${HM[0]+HM[1]}`).text(function(index, text) {
                         return text + " (Ocupado)";
                     });
                 }
@@ -943,6 +926,11 @@ function llenarDivHoras(){
                         </div>
                     </div>
                     <div class="row">
+                                    <div class="col-12" style="text-align: center;">
+                                        <img src="../assets/img/pages/logo.jpg" alt="lashes" style="width: 200px; height: auto;">
+                                    </div>
+                            </div>
+                    <div class="row mt-4">
                         <div class="col" style="text-align: center;">
                             <h5 style="color: #727f00">Seleccione la hora de su cita</h5>
                         </div>
@@ -954,10 +942,11 @@ function llenarDivHoras(){
             for (let j = 0; j < 6; j++) {
                 if (horas[(i*6)+j])
                 {
+                    const HM = horas[(i*6)+j].split(':');
                     html += `
                     <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-6 mt-4">
-                        <div id="${horas[(i*6)+j]}" class="card div-horas" onclick="SelectHora('${horas[(i*6)+j]}')">
-                            <label id="label${horas[(i*6)+j]}" class="centrarHora">${convertirHoraAMPM(horas[(i*6)+j])}</label>
+                        <div id="div${HM[0]+HM[1]}" class="card div-horas" onclick="SelectHora('${horas[(i*6)+j]}')">
+                            <label id="label${HM[0]+HM[1]}" class="centrarHora">${convertirHoraAMPM(horas[(i*6)+j])}</label>
                         </div>
                     </div>
                     `;
