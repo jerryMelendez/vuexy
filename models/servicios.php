@@ -16,7 +16,7 @@ require ('connection.php');
 
         public function index(){
             $db = new connection();// conectamos a la base de datos
-             $mysqli = mysqli_prepare($db->connect(), "select * from servicios;");
+             $mysqli = mysqli_prepare($db->connect(), "select * from dbsgs.inventario where iservicio = 2;");
              $mysqli->execute();
  
              $result = $mysqli->get_result();
@@ -32,7 +32,7 @@ require ('connection.php');
 
         public function getByidCategoria($id){
             $db = new connection();// conectamos a la base de datos
-             $mysqli = mysqli_prepare($db->connect(), "SELECT * FROM dbsgs.inventario where idcat = ?;"); // consultamos desde la tabla inventario
+             $mysqli = mysqli_prepare($db->connect(), "SELECT * FROM dbsgs.inventario where idcat = ? and iservicio = 2"); // consultamos desde la tabla inventario
              $mysqli->bind_param("i", $id);
              $mysqli->execute();
  

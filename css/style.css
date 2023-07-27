@@ -72,7 +72,8 @@
 	cursor: pointer;
 	transition: transform 0.3s ease; /* Agrega una transición suave al efecto */
 	border:#B7EC00 2px solid;
-	color: #727f00
+	color: #727f00;
+	min-height: 147.2px;
 }
   
 .div-servicios:hover {

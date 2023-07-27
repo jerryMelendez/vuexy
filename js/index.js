@@ -22,7 +22,7 @@ $('#formulario').hide();
 $('#info').hide();
 // Funcion que se ejecuta al presionar el boton de regresar
 function backbutton(){
-    if (nombreCategoria && (nombreCategoria.includes('Pestañas') || nombreCategoria.includes('Cejas') || nombreCategoria.includes('Párpados') || nombreCategoria.includes('Labios')))
+    if (nombreCategoria && (nombreCategoria.includes('Pestañ') || nombreCategoria.includes('Ceja') || nombreCategoria.includes('Párpad') || nombreCategoria.includes('Labi')))
     {
         switch(steps){
             case 1:
@@ -164,15 +164,14 @@ function getCategorias(idsucursall, nombreSuc, apertura, cierre) {
     const diffHours = Math.floor(diff / (1000 * 60 * 60));
     const diffMinutes = Math.floor((diff / (1000 * 60)) % 60);
     for (let i = startDate.getHours(); i <= endDate.getHours() - 1; i++) {
-        if (i !== 12){
-            for (let j = 0; j < 60; j += 30) {
-                if (j === 0) {
-                    horas.push(`${i}:00`);
-                } else {
-                    horas.push(`${i}:${j}`);
-                }
+        for (let j = 0; j < 60; j += 30) {
+            if (j === 0) {
+                horas.push(`${i}:00`);
+            } else {
+                horas.push(`${i}:${j}`);
             }
         }
+        
     }
 
     $.ajax({
@@ -252,7 +251,8 @@ function getCategorias(idsucursall, nombreSuc, apertura, cierre) {
 
 // Obtener tipo de servicios
 function getTipoServicio(idcategoria, nombreCat){
-    if (nombreCat.includes('Pestañas') || nombreCat.includes('Cejas') || nombreCat.includes('Párpados') || nombreCat.includes('Labios'))
+    nombreCategoria = nombreCat;
+    if (nombreCategoria && (nombreCategoria.includes('Pestañ') || nombreCategoria.includes('Ceja') || nombreCategoria.includes('Párpad') || nombreCategoria.includes('Labi')))
     {
         let cols = ``;
         steps++;
@@ -330,7 +330,7 @@ function getTipoServicio(idcategoria, nombreCat){
 // Funcion que se ejecuta al seleccionar una categoria
 function getServiciosByCategoria(idcategoria, nombreCat){
     steps++;
-    nombreCategoria = nombreCat;
+    
     let cols = ``;
     $.ajax({
         url: '../controllers/servicioController.php',
@@ -353,7 +353,9 @@ function getServiciosByCategoria(idcategoria, nombreCat){
                                                 <img src="../assets/img/servicios/${servicios[i].foto}" class="rounded-circle" style="max-width: 80px; min-width: 80px; max-height: 80px; min-height: 80px; border: #FFC275 3px solid;" alt="Avatar" />
                                             </div>
                                             <div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-8 mt-3">
-                                                <label style="cursor: pointer;"><strong>${servicios[i].nombre}</strong></label>
+                                                <label style="cursor: pointer;"><strong>${servicios[i].nombre}</strong></label><br>
+                                                <label><strong>$</strong> ${servicios[i].precio}</label><br>
+                                                <strong><i class="bi bi-stopwatch"></i></strong><label style="padding-left: 5px">${getMinutos(servicios[i].duracion)}</label>
                                             </div>
                                         </div>
                                     </div>
@@ -981,4 +983,11 @@ function convertirHoraAMPM(hora24) {
     }
   
     return `${hora12}:${minutos} ${sufijo}`;
+  }
+
+  // obtiene los minutos de un time
+  function getMinutos(duracion){
+    const [horas, minutos, segundos] = duracion.split(':').map(parseFloat);
+    const tiempoEnMinutos = (horas * 60) + minutos + (segundos / 60);
+    return tiempoEnMinutos + ' min.';
   }
