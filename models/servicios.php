@@ -30,10 +30,17 @@ require ('connection.php');
         }
 
 
-        public function getByidCategoria($id){
+        public function getByidCategoria($id, $idtipoServicio){
             $db = new connection();// conectamos a la base de datos
-             $mysqli = mysqli_prepare($db->connect(), "SELECT * FROM dbsgs.inventario where idcat = ? and iservicio = 2"); // consultamos desde la tabla inventario
-             $mysqli->bind_param("i", $id);
+            if ($idtipoServicio == -1) {
+                $mysqli = mysqli_prepare($db->connect(), "SELECT * FROM dbsgs.inventario where idcat = ? and iservicio = 2"); // consultamos desde la tabla inventario
+                $mysqli->bind_param("i", $id);
+            }
+            else
+            {
+                $mysqli = mysqli_prepare($db->connect(), "SELECT * FROM dbsgs.inventario where idcat = ? and idtipo = ? and iservicio = 2"); // consultamos desde la tabla inventario
+                $mysqli->bind_param("ii", $id, $idtipoServicio);
+            }
              $mysqli->execute();
  
              $result = $mysqli->get_result();

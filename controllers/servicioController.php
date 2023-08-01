@@ -14,7 +14,7 @@ if (isset($_GET['function'])) {
         case 'getByidCategoria':
             # code...
             $servicio = new Servicios();
-            $servicio->getByidCategoria($_GET['id']);
+            $servicio->getByidCategoria($_GET['id'], $_GET['idtipoServicio']);
             break;
     }
 

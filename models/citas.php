@@ -65,9 +65,10 @@ require('connection.php');
                 
                     // var_dump($result);
                     // Guardar en la tabla citas_servicios
-                    $query = "INSERT into citas_servicios(idcita, idservicio) VALUES(?, ?)";
+                    // $query = "INSERT into citas_servicios(idcita, idservicio) VALUES(?, ?)";
+                    $query = "INSERT INTO `citas_servicios`(`idcita`, `idcliente`, `idservicio`, `idespecialista`, `fecha_inicio`, `fecha_final`, `cantidad`, `esproducto`) VALUES (?,?,?,?,?,?,0,0)";
                     $mysqliCitaServ = mysqli_prepare($db->connect(), $query);
-                    $mysqliCitaServ->bind_param("ii", $idCita, $cita['id_servicio']);
+                    $mysqliCitaServ->bind_param("iiiiss", $idCita, $cita['idcliente'], $cita['id_servicio'], $cita['idempleado'], $cita['start'], $cita['end']);
                     $mysqliCitaServ->execute();
 
                     $resultCitaServ = $mysqliCitaServ->get_result();
@@ -78,10 +79,10 @@ require('connection.php');
             }
             else {
                 // guardar el cliente en la base de datos
-                $mysqli = mysqli_prepare($db->connect(), "INSERT INTO `dbsgs`.`clientes` (`nombre`, `cel_claro`, `cel_tigo`, `cel_whatsapp`, `cedula`, `fecha_nacimiento`, `edad`, `email`, `fecha_alta`, `iddepartamento`, `idmunicipio`, `barrio`, `foto`, `estado`, `sexo`) 
-                VALUES (?, ' ', ' ', ?, '', '1900-01-01', '23', ?, '".date('Y-m-d')."', ?, ?, ' ', ' ', '1', ?);");
+                $mysqli = mysqli_prepare($db->connect(), "INSERT INTO `dbsgs`.`clientes` (`nombre`, `cel_claro`, `cel_tigo`, `cel_whatsapp`, `cedula`, `fecha_nacimiento`, `edad`, `email`, `fecha_alta`, `iddepartamento`, `idmunicipio`, `barrio`, `foto`, `estado`, `sexo`, `origen`) 
+                VALUES (?, ' ', ' ', ?, '', '1900-01-01', '23', ?, '".date('Y-m-d')."', ?, ?, ' ', ' ', '1', ?, ?);");
 
-                $mysqli->bind_param("ssssss", $cita['nombre_cliente'], $cita['whatsapp'], $cita['email_cliente'], $cita['id_departamento'], $cita['id_municipio'], $cita['sexo']);
+                $mysqli->bind_param("ssssssi", $cita['nombre_cliente'], $cita['whatsapp'], $cita['email_cliente'], $cita['id_departamento'], $cita['id_municipio'], $cita['sexo'], $cita['origen']);
                 $mysqli->execute();
 
                 $resultInsertCliente = $mysqli->get_result();
@@ -107,9 +108,9 @@ require('connection.php');
                     $idCita = $mysqli->insert_id;
 
                     // Guardar en la tabla citas_servicios
-                    $query = "INSERT into citas_servicios(idcita, idservicio) VALUES(?, ?)";
+                    $query = "INSERT into citas_servicios(`idcita`, `idcliente`, `idservicio`, `idespecialista`, `fecha_inicio`, `fecha_final`, `cantidad`, `esproducto`) VALUES (?,?,?,?,?,?,0,0)";
                     $mysqliCitaServ = mysqli_prepare($db->connect(), $query);
-                    $mysqliCitaServ->bind_param("ii", $idCita, $cita['id_servicio']);
+                    $mysqliCitaServ->bind_param("iiiiss", $idCita, $cita['idcliente'], $cita['id_servicio'], $cita['idempleado'], $cita['start'], $cita['end']);
                     $mysqliCitaServ->execute();
 
                     $resultCitaServ = $mysqliCitaServ->get_result();

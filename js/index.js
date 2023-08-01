@@ -14,6 +14,8 @@ let arrayFecha; // arreglo que contiene la fecha de la cita
 let departamentos = [];
 let municipios = [];
 let horas = [];
+let idTipoServicio;
+let end; // fecha fin de la cita
 
 
 $('#sucursales').hide();
@@ -268,7 +270,7 @@ function getTipoServicio(idcategoria, nombreCat){
                     const prom = new Promise((resolve) => {
                         for (let i = 0; i < tipoServicios.length; i++) {
                             cols += `
-                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 mt-3" onclick="getServiciosByCategoria(${idcategoria}, '${nombreCat}')">
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 mt-3" onclick="getServiciosByCategoria(${idcategoria}, '${nombreCat}', ${tipoServicios[i].id})">
                                 <div class="card div-servicios">
                                     <div class="card-body">
                                         <div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-8 mt-3">
@@ -323,19 +325,19 @@ function getTipoServicio(idcategoria, nombreCat){
     }
     else
     {
-        getServiciosByCategoria(idcategoria, nombreCat);
+        getServiciosByCategoria(idcategoria, nombreCat, -1);
     }
 }
 
 // Funcion que se ejecuta al seleccionar una categoria
-function getServiciosByCategoria(idcategoria, nombreCat){
+function getServiciosByCategoria(idcategoria, nombreCat, idtipoServicio){
     steps++;
     
     let cols = ``;
     $.ajax({
         url: '../controllers/servicioController.php',
         type: 'GET',
-        data: {function: 'getByidCategoria', id: idcategoria},
+        data: {function: 'getByidCategoria', id: idcategoria, idtipoServicio},
         success: function(result){
             let servicios;
 
@@ -344,7 +346,7 @@ function getServiciosByCategoria(idcategoria, nombreCat){
                 const prom = new Promise((resolve) => {
                     for (let i = 0; i < servicios.length; i++) {
                         cols += `
-                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 mt-3" onclick="getUsuarios(${servicios[i].idprod}, '${servicios[i].nombre}')">
+                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 mt-3" onclick="getUsuarios(${servicios[i].idprod}, '${servicios[i].nombre}', '${servicios[i].duracion}')">
                             <div class="card div-servicios">
                                 <div class="card-body">
                                     <div class="container">
@@ -355,7 +357,7 @@ function getServiciosByCategoria(idcategoria, nombreCat){
                                             <div class="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-8 mt-3">
                                                 <label style="cursor: pointer;"><strong>${servicios[i].nombre}</strong></label><br>
                                                 <label><strong>$</strong> ${servicios[i].precio}</label><br>
-                                                <strong><i class="bi bi-stopwatch"></i></strong><label style="padding-left: 5px">${getMinutos(servicios[i].duracion)}</label>
+                                                <strong><i class="bi bi-stopwatch"></i></strong><label style="padding-left: 5px">${getMinutos(servicios[i].duracion)+ ' min.'}</label>
                                             </div>
                                         </div>
                                     </div>
@@ -409,10 +411,13 @@ function getServiciosByCategoria(idcategoria, nombreCat){
 }
 
 // cargar los estilistas
-function getUsuarios(idserv, nombreserv){
+function getUsuarios(idserv, nombreserv, duracionServicio){
     steps++;
     idservicio = idserv;
     nombreServicio = nombreserv;
+    duracion = duracionServicio;
+    const today = new Date();
+
 
     let html = `
                      <div class="container">
@@ -431,7 +436,7 @@ function getUsuarios(idserv, nombreserv){
                                  <label style="font-weight: bold; color: #727f00">Seleccione la fecha:</label>
                              </div>
                              <div class="col">
-                                 <input id="inputFecha" type="date" class="form-control" onchange="selectFecha(event)" style="border:#B7EC00 2px solid; color: #727f00">
+                                 <input id="inputFecha" type="date" class="form-control" onchange="selectFecha(event)" style="border:#B7EC00 2px solid; color: #727f00" min="${today.getFullYear()}-${(today.getMonth()+1)<10 ? ('0' + (today.getMonth()+1)): (today.getMonth()+1)}-${today.getDate()<10 ? ('0'+today.getDate()) : today.getDate()}">
                              </div>
                          </div>
                          <div class="row mt-4">
@@ -587,97 +592,112 @@ function selectDepartamento(event){
 }
 
 function agendarCita(){
-    const fecha = new Date(fechaCita + ' ' + horacita);
-
-    // Faltan los campos idcliente y tipo, estos se establecen al comprobar 
-    // que si el cliente esta registrado o no
-    const cita = {
-        borderColor: '#B6CF02',
-        backgroundColor: '#B6CF02',
-        start: fechaCita + ' ' + horacita,
-        end: fechaCita + ' ' + horacita,
-        idempleado: idusuario,
-        estado: 1, // agendado
-        origen: 2, // origen web
-        nota: 'Un servicio de ' + nombreServicio + ' agendado desde la web',
-        idsucursal: idsucursal,
-        nombre_cliente: $('#nombreCliente').val(),
-        whatsapp: $('#whatsapp').val(),
-        email_cliente: $('#email_cliente').val(),
-        id_departamento: $('#Departamento').val(),
-        id_municipio: $('#Municipio').val(),
-        sexo: $('#sexo').val(),
-        id_servicio: idservicio
-    }
-
-    Swal.fire({
-            icon: 'question',
-            title: '¿Desea agendar esta cita?',
-            text: 'Se agendará una cita para el cliente '+$('#nombreCliente').val()+' el día ' + arrayFecha[2] + '/' + arrayFecha[1] + '/' + arrayFecha[0] + ' a las ' + horacita + ' con el especialista ' + nombreEstilista
-            + ' para el servicio de ' + nombreServicio,
-            showCancelButton: true,
+    if ($('#nombreCliente').val() === '' || $('#whatsapp').val() === '' || $('#whatsapp').val().length < 9 || $('#email_Cliente').val() === '' || 
+    $('#Departamento').val() === '6' || $('#Municipio').val() === null || $('#sexo').val() === '')
+    {
+        Swal.fire({
+            icon: 'error',
+            title: 'Por favor ingrese todos los datos',
             confirmButtonColor: '#B6CF02',
             iconColor: '#B6CF02',
-            confirmButtonText: `Agendar`,
-            cancelButtonText: `Cancelar`,
-            }).then((result) => {
-            /* Read more about isConfirmed, isDenied below */
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: '../controllers/citaController.php',
-                    type: 'POST',
-                    data: {function: 'create', cita},
-                    success: function(result){
-                        if (result === 'Cita creada correctamente'){
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Cita agendada',
-                                text: 'Su cita ha sido agendada correctamente',
-                                confirmButtonColor: '#B6CF02',
-                                iconColor: '#B6CF02'
-                              });
-                            $('#parrafoDetalleCita').text('Muchas gracias ' + $('#nombreCliente').val() + ' por realizar una reservación de nuestros servicios a continuación se muestran los detalles de la cita, puede revisar su correo electrónico donde le hemos enviado estos datos');
-                            $('#infoSucursal').text(nombreSucursal);
-                            $('#infoCategoria').text(nombreCategoria);
-                            $('#infoServicio').text(nombreServicio);
-                            $('#infoFecha').text(arrayFecha[2] + '/' + arrayFecha[1] + '/' + arrayFecha[0]);
-                            $('#infoHora').text(horacita + (horacita.startsWith('0') || horacita.startsWith('10') || horacita.startsWith('11') ? ' am' : ' pm   '));
-                            $('#infoEstilista').text(nombreEstilista);
-                            $('#formulario').hide();
-                            $('#info').show();
+            confirmButtonText: `OK`,
+        })
+    }
+    else
+    {    
 
-                            // Enviamos el email al cliente
-                            $.ajax({
-                                type: "POST",
-                                url: "../controllers/clientesController.php",
-                                data:{
-                                    function: 'sendEmail',
-                                    email: $('#email_cliente').val(),
-                                    sucursal: nombreSucursal,
-                                    categoria: nombreCategoria,
-                                    servicio: nombreServicio,
-                                    fecha: arrayFecha[2] + '/' + arrayFecha[1] + '/' + arrayFecha[0] + ' ' + horacita,
-                                    estilista: nombreEstilista,
-                                    cliente: $('#nombreCliente').val()
-                                },
-                                success: function(result){
-                                },
-                                error: function(error){
-                                }
-                            })
-                        }
-                    },
-                    error: function(error) {
-                        alert('Hubo un error en la peticion');
-                    }
-                });
-            }
-            else if (result.isDenied) {
-            }
+        end = new Date(fechaCita + ' ' + horacita);
+        end.setMinutes(end.getMinutes() + getMinutos(duracion));
+        // console.log(end.getFullYear()+'-'+(end.getMonth()+1)+'-'+end.getDate()+' '+end.getHours()+':'+end.getMinutes()+'-'+end.getSeconds());
 
+        const cita = {
+            borderColor: '#B6CF02',
+            backgroundColor: '#B6CF02',
+            start: fechaCita + ' ' + horacita,
+            end: end.getFullYear()+'-'+(end.getMonth()+1)+'-'+end.getDate()+' '+end.getHours()+':'+end.getMinutes()+':'+end.getSeconds(),
+            idempleado: idusuario,
+            estado: 1, // agendado
+            origen: 2, // origen web
+            nota: 'Un servicio de ' + nombreServicio + ' agendado desde la web',
+            idsucursal: idsucursal,
+            nombre_cliente: $('#nombreCliente').val(),
+            whatsapp: $('#whatsapp').val().split('-')[0]+$('#whatsapp').val().split('-')[1],
+            email_cliente: $('#email_cliente').val(),
+            id_departamento: $('#Departamento').val(),
+            id_municipio: $('#Municipio').val(),
+            sexo: $('#sexo').val(),
+            id_servicio: idservicio
         }
-    );
-
+        console.log(cita);
+    
+        Swal.fire({
+                icon: 'question',
+                title: '¿Desea agendar esta cita?',
+                text: 'Se agendará una cita para el cliente '+$('#nombreCliente').val()+' el día ' + arrayFecha[2] + '/' + arrayFecha[1] + '/' + arrayFecha[0] + ' a las ' + horacita + ' con el especialista ' + nombreEstilista
+                + ' para el servicio de ' + nombreServicio,
+                showCancelButton: true,
+                confirmButtonColor: '#B6CF02',
+                iconColor: '#B6CF02',
+                confirmButtonText: `Agendar`,
+                cancelButtonText: `Cancelar`,
+                }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '../controllers/citaController.php',
+                        type: 'POST',
+                        data: {function: 'create', cita},
+                        success: function(result){
+                            if (result === 'Cita creada correctamente'){
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Cita agendada',
+                                    text: 'Su cita ha sido agendada correctamente',
+                                    confirmButtonColor: '#B6CF02',
+                                    iconColor: '#B6CF02'
+                                  });
+                                $('#parrafoDetalleCita').text('Muchas gracias ' + $('#nombreCliente').val() + ' por realizar una reservación de nuestros servicios a continuación se muestran los detalles de la cita, puede revisar su correo electrónico donde le hemos enviado estos datos');
+                                $('#infoSucursal').text(nombreSucursal);
+                                $('#infoCategoria').text(nombreCategoria);
+                                $('#infoServicio').text(nombreServicio);
+                                $('#infoFecha').text(arrayFecha[2] + '/' + arrayFecha[1] + '/' + arrayFecha[0]);
+                                $('#infoHora').text(horacita + (horacita.startsWith('0') || horacita.startsWith('10') || horacita.startsWith('11') ? ' am' : ' pm   '));
+                                $('#infoEstilista').text(nombreEstilista);
+                                $('#formulario').hide();
+                                $('#info').show();
+    
+                                // Enviamos el email al cliente
+                                $.ajax({
+                                    type: "POST",
+                                    url: "../controllers/clientesController.php",
+                                    data:{
+                                        function: 'sendEmail',
+                                        email: $('#email_cliente').val(),
+                                        sucursal: nombreSucursal,
+                                        categoria: nombreCategoria,
+                                        servicio: nombreServicio,
+                                        fecha: arrayFecha[2] + '/' + arrayFecha[1] + '/' + arrayFecha[0] + ' ' + horacita,
+                                        estilista: nombreEstilista,
+                                        cliente: $('#nombreCliente').val()
+                                    },
+                                    success: function(result){
+                                    },
+                                    error: function(error){
+                                    }
+                                })
+                            }
+                        },
+                        error: function(error) {
+                            alert('Hubo un error en la peticion');
+                        }
+                    });
+                }
+                else if (result.isDenied) {
+                }
+    
+            }
+        );
+    }
 }
 
 
@@ -721,118 +741,6 @@ function comprobarHoras(horasOcupadas){
         }
     });
 
-    // if(horasOcupadas.includes('8:0')){
-    //     $('#08').removeClass('div-horas');
-    //     $('#08').addClass('div-disabled');
-    //     $("#label08").text(function(index, text) {
-    //         return text + " (Ocupado)";
-    //     });
-    // }
-    // if(horasOcupadas.includes('8:30')){
-    //     $('#0830').removeClass('div-horas');
-    //     $('#0830').addClass('div-disabled');
-    //     $("#label0830").text(function(index, text) {
-    //         return text + " (Ocupado)";
-    //     });
-    // }
-    // if(horasOcupadas.includes('9:0')){
-    //     $('#09').removeClass('div-horas');
-    //     $('#09').addClass('div-disabled');
-    //     $("#label09").text(function(index, text) {
-    //         return text + " (Ocupado)";
-    //     });
-    // }
-    // if(horas.includes('9:30')){
-    //     $('#0930').removeClass('div-horas');
-    //     $('#0930').addClass('div-disabled');
-    //     $("#label0930").text(function(index, text) {
-    //         return text + " (Ocupado)";
-    //     });
-    // }
-    // if(horas.includes('10:0')){
-    //     $('#10').removeClass('div-horas');
-    //     $('#10').addClass('div-disabled');
-    //     $("#label10").text(function(index, text) {
-    //         return text + " (Ocupado)";
-    //     });
-    // }
-    // if(horas.includes('10:30')){
-    //     $('#1030').removeClass('div-horas');
-    //     $('#1030').addClass('div-disabled');
-    //     $("#label1030").text(function(index, text) {
-    //         return text + " (Ocupado)";
-    //     });
-    // }
-    // if(horas.includes('11:0')){
-    //     $('#11').removeClass('div-horas');
-    //     $('#11').addClass('div-disabled');
-    //     $("#label11").text(function(index, text) {
-    //         return text + " (Ocupado)";
-    //     });
-    // }
-    // if(horas.includes('11:30')){
-    //     $('#1130').removeClass('div-horas');
-    //     $('#1130').addClass('div-disabled');
-    //     $("#label1130").text(function(index, text) {
-    //         return text + " (Ocupado)";
-    //     });
-    // }
-    // if(horas.includes('13:0')){
-    //     $('#13').removeClass('div-horas');
-    //     $('#13').addClass('div-disabled');
-    //     $("#label13").text(function(index, text) {
-    //         return text + " (Ocupado)";
-    //     });
-    // }
-    // if(horas.includes('13:30')){
-    //     $('#1330').removeClass('div-horas');
-    //     $('#1330').addClass('div-disabled');
-    //     $("#label1330").text(function(index, text) {
-    //         return text + " (Ocupado)";
-    //     });
-    // }
-    // if(horas.includes('14:0')){
-    //     $('#14').removeClass('div-horas');
-    //     $('#14').addClass('div-disabled');
-    //     $("#label14").text(function(index, text) {
-    //         return text + " (Ocupado)";
-    //     });
-    // }
-    // if(horas.includes('14:30')){
-    //     $('#1430').removeClass('div-horas');
-    //     $('#1430').addClass('div-disabled');
-    //     $("#label1430").text(function(index, text) {
-    //         return text + " (Ocupado)";
-    //     });
-    // }
-    // if(horas.includes('15:0')){
-    //     $('#15').removeClass('div-horas');
-    //     $('#15').addClass('div-disabled');
-    //     $("#label15").text(function(index, text) {
-    //         return text + " (Ocupado)";
-    //     });
-    // }
-    // if(horas.includes('15:30')){
-    //     $('#1530').removeClass('div-horas');
-    //     $('#1530').addClass('div-disabled');
-    //     $("#label1530").text(function(index, text) {
-    //         return text + " (Ocupado)";
-    //     });
-    // }
-    // if(horas.includes('16:0')){
-    //     $('#16').removeClass('div-horas');
-    //     $('#16').addClass('div-disabled');
-    //     $("#label16").text(function(index, text) {
-    //         return text + " (Ocupado)";
-    //     });
-    // }
-    // if(horas.includes('16:30')){
-    //     $('#1630').removeClass('div-horas');
-    //     $('#1630').addClass('div-disabled');
-    //     $("#label1630").text(function(index, text) {
-    //         return text + " (Ocupado)";
-    //     });
-    // }
 }
 
 // Funcion para restaurar las horas por si el usuario retrocede
@@ -989,5 +897,34 @@ function convertirHoraAMPM(hora24) {
   function getMinutos(duracion){
     const [horas, minutos, segundos] = duracion.split(':').map(parseFloat);
     const tiempoEnMinutos = (horas * 60) + minutos + (segundos / 60);
-    return tiempoEnMinutos + ' min.';
+    return tiempoEnMinutos;
   }
+
+//   $(document).ready(function() {
+//     $("#whatsapp").on("input", function() {
+//       let value = $(this).val();
+//       value = value.replace(/\D/g, ""); // Elimina todos los caracteres no numéricos
+//       value = value.replace(/(\d{4})(\d{0,4})/, "$1-$2"); // Agrega el guión en el medio
+//       $(this).val(value);
+//     });
+//   });
+
+  $(document).ready(function() {
+    $('#whatsapp').on('input', function() {
+      // Remover todos los caracteres que no sean números
+      var numero = $(this).val().replace(/\D/g,'');
+      
+      // Aplicar el formato ####-####
+      var formato = '';
+      for (var i = 0; i < numero.length; i++) {
+        if (i === 4) {
+          formato += '-';
+        }
+        formato += numero[i];
+      }
+      
+      // Actualizar el valor del input con el formato aplicado
+      $(this).val(formato);
+    //   console.log($('#whatsapp').val().split('-')[0]+$('#whatsapp').val().split('-')[1])
+    });
+  });
